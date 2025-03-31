@@ -1,9 +1,8 @@
-import { getGameContainer } from "./dom";
+import { addResizeEvent, removeResizeEvent } from "./dom.js";
 
 export class Sprite {
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
+    constructor(scale) {
+        this.scale = scale;
         this.constructed = false;
     }
 
@@ -11,7 +10,9 @@ export class Sprite {
     createSprite() {
         if(!this.constructed) {
             this.constructed = true;
-            //TODO
+            addResizeEvent(this, () => {
+                console.log("Resize sprite" + this);
+            });
         }
     }
 
@@ -19,7 +20,7 @@ export class Sprite {
     removeSprite() {
         if(this.constructed) {
             this.constructed = false;
-            //TODO
+            removeResizeEvent(this);
         }
     }
 
@@ -27,12 +28,8 @@ export class Sprite {
         this.location[0] = x;
         this.location[1] = y;
     }
-    setWidth(width) { this.width = width; }
-    setHeight(height) { this.height = height; }
+    setScale(scale) { this.scale = scale; }
 
-    getLocation() {
-        return this.location;
-    }
-    getWidth() { return this.width; }
-    getHeight() { return this.height; }
+    getLocation() { return this.location; }
+    getScale() { return this.scale; }
 }
