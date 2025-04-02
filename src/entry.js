@@ -1,5 +1,3 @@
-import { initializeDomHandler } from "./dom.js"
-import { Sprite } from "./sprite.js";
 
 //should be a button event
 function startGame() {
@@ -8,9 +6,6 @@ function startGame() {
 
     //retrieve game container
     let gameContainer = document.getElementById("game-container");
-
-    //initialize DOM handler
-    initializeDomHandler(gameContainer);
 
     //test sprite
     let testSprite = new Sprite(1.0);
