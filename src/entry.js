@@ -1,3 +1,4 @@
+import { initializeGui } from "./gui.js";
 
 //should be a button event
 function startGame() {
@@ -7,14 +8,8 @@ function startGame() {
     //retrieve game container
     let gameContainer = document.getElementById("game-container");
 
-    //test sprite
-    let testSprite = new Sprite(1.0);
-    testSprite.createSprite();
-    
-    //TODO implement setup logic in here
-    let exampleElement = document.createElement("p");
-    exampleElement.innerText = ("Example game start functionality... TODO");
-    gameContainer.appendChild(exampleElement);
+    //initialize GUI
+    initializeGui(gameContainer);
 }
 
 //entry point function
