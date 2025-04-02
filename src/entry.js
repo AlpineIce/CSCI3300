@@ -1,4 +1,3 @@
-import { initializeDomHandler } from "./dom.js"
 import { Sprite } from "./sprite.js";
 
 //should be a button event
