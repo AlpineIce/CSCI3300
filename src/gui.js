@@ -1,91 +1,104 @@
-//Create a button with a label and clickable action
-function createButton(label, onClick) {
-    const button = document.createElement("button");
-    button.innerText = label;
-    button.style.margin = "5px";
-    button.style.padding = "10px 20px";
-    button.style.fontSize = "16px";
-    button.addEventListener("click", onClick);
-    return button;
-}
-
 //Create a slider with a min, max, and default value
-function createSlider(min, max, defaultValue) {
-    const sliderContainer = document.createElement("div");
-    sliderContainer.style.marginTop = "10px";
-    sliderContainer.style.display = "none";  
-    sliderContainer.style.flexDirection = "column";
-    sliderContainer.style.alignItems = "center";
+function createSliderContainer(min, max) {
+    const startingValue = min;
 
+    //create label
     const label = document.createElement("label");
-    label.innerText = `Amount: ${defaultValue}`;
+    label.innerText = `Amount: ${startingValue}`;
 
+    //then create slider
     const slider = document.createElement("input");
+    slider.id = "bet-raise-slider";
     slider.type = "range";
-    slider.min = min; 
-    slider.max = max;  
-    slider.value = defaultValue; 
-
+    slider.min = min;
+    slider.max = max;
+    slider.value = startingValue;
     
+    //slider event
     slider.addEventListener("input", () => {
         label.innerText = `Amount: ${slider.value}`;
     });
+
+    //create container for label and slider
+    const sliderContainer = document.createElement("div");
+    sliderContainer.id = "slider-container";
 
     // Append label and slider to the container
     sliderContainer.appendChild(label);
     sliderContainer.appendChild(slider);
 
-    return { sliderContainer, slider };  
+    return sliderContainer;
+}
+
+//button helper class
+function createButton(label, id, onClick) {
+    const button = document.createElement("button");
+    button.id = id;
+    button.innerText = label;
+    button.addEventListener("click", () => {
+        //call event with the value of the slider as a parameter
+        const value = document.getElementById("bet-raise-slider").value;
+        onClick(value);
+    });
+
+    return button;
+}
+
+function createBetRaiseContainer(betEvent, raiseEvent) {
+    //create div
+    const container = document.createElement("div");
+    container.id = "bet-raise-buttons-container"
+
+    //create bet and raise buttons
+    container.appendChild(createButton("Bet", "bet-button", betEvent));
+    container.appendChild(createButton("Raise", "raise-button", raiseEvent));
+
+    return container;
+}
+
+//betEvent and raiseEvents take in the value of the slider as the only parameter
+function createButtonSliderPair(min, max, betEvent, raiseEvent) {
+    //create div
+    const container = document.createElement("div");
+    container.id = "buttons-with-slider-container";
+
+    // Create slider and buttons containers
+    container.appendChild(createSliderContainer(min, max));
+    container.appendChild(createBetRaiseContainer(betEvent, raiseEvent));
+
+    return container;
 }
 
 //Function to initialize the buttons and sliders
 export function initializeGui(gameContainer) {
+    //add button container
     const buttonContainer = document.createElement("div");
-    buttonContainer.style.position = "fixed";
-    buttonContainer.style.bottom = "20px";
-    buttonContainer.style.right = "20px";
-    buttonContainer.style.display = "flex";
-    buttonContainer.style.flexDirection = "column";
-    buttonContainer.style.alignItems = "flex-end";
-    buttonContainer.style.background = "rgba(255, 255, 255, 0.9)";
-    buttonContainer.style.padding = "10px";
-    buttonContainer.style.borderRadius = "12px";
-    buttonContainer.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-    document.body.appendChild(buttonContainer); 
+    buttonContainer.id = "button-container"
+    document.body.appendChild(buttonContainer);
 
-    // Create sliders for both Bet and Raise
-    const { sliderContainer: betSliderContainer, slider: betSlider } = createSlider(50, 500, 50);  
-    const { sliderContainer: raiseSliderContainer, slider: raiseSlider } = createSlider(50, 500, 50);  
-
-    // Shows the slider for the bet button
-    const betButton = createButton("Bet", () => {
-        betSliderContainer.style.display =
-            betSliderContainer.style.display === "none" ? "flex" : "none";  
-        console.log(`Bet Amount: ${betSlider.value}`);  
-    });
-
-    // Shows the slider for the raise button
-    const raiseButton = createButton("Raise", () => {
-        raiseSliderContainer.style.display =
-            raiseSliderContainer.style.display === "none" ? "flex" : "none";  
-        console.log(`Raise Amount: ${raiseSlider.value}`);  
-    });
-
-    
-    const checkButton = createButton("Check", () => {
+    //check button
+    // 
+    // ----------TODO TO WHOEVER WORKS ON THIS STUFF NEXT: REMOVE THE INLINE FUNCTIONS AND ADD ACTUAL FUNCTIONALITY TO THEM!!!----------
+    // 
+    const checkButton = createButton("Check", "check-button", (value) => {
         console.log("Player checks"); 
     });
 
-    // Call Button
-    const callButton = createButton("Call", () => {
+    //call button
+    // 
+    // ----------TODO TO WHOEVER WORKS ON THIS STUFF NEXT: REMOVE THE INLINE FUNCTIONS AND ADD ACTUAL FUNCTIONALITY TO THEM!!!----------
+    // 
+    const callButton = createButton("Call", "call-button", (value) => {
         console.log("Player calls");  
     });
 
-    // Append buttons and sliders to the button container
-    buttonContainer.appendChild(betButton);
-    buttonContainer.appendChild(betSliderContainer);  
-    buttonContainer.appendChild(raiseButton);
-    buttonContainer.appendChild(raiseSliderContainer); 
+    //append independent buttons
     buttonContainer.appendChild(checkButton);
     buttonContainer.appendChild(callButton);
+
+    //append buttons that use slider 
+    // 
+    // ----------TODO TO WHOEVER WORKS ON THIS STUFF NEXT: REMOVE THE INLINE FUNCTIONS AND ADD ACTUAL FUNCTIONALITY TO THEM!!!----------
+    // 
+    buttonContainer.appendChild(createButtonSliderPair(50, 500, (value) => { console.log("Bet: " + value)}, (value) => { console.log("Raise: " + value)}));
 }
