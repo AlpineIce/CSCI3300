@@ -5,11 +5,8 @@ function startGame() {
     //remove start button
     document.getElementById("start-button-container").remove();
 
-    //retrieve game container
-    let gameContainer = document.getElementById("game-container");
-
     //initialize GUI
-    initializeGui(gameContainer);
+    initializeGui();
 }
 
 //entry point function

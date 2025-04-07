@@ -7,17 +7,6 @@ body {
     text-align: center;
 }
 
-#game-container {
-    margin: 50px;
-    left: 10%;
-    right: 10%;
-    border: 1px solid;
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    padding: 20px;
-}
-
 #start-button-container {    
     display: flex;
     justify-content: center;
@@ -34,12 +23,11 @@ body {
 
 #button-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 40px;
+    right: 40px;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    background-color: rgba(255, 255, 255, 0.9);
     padding: 10px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -49,6 +37,32 @@ body {
         padding: 10px 20px;
         font-size: 16px;
     }
+}
+
+#community-cards-container {
+    position: fixed;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#hole-cards-container {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 #slider-container {
@@ -67,5 +81,13 @@ body {
         flex: 1;
         width: 100%;
     }
+}
 
+.card {
+    width: 150px;
+    height: 250px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    margin: 10px;
 }
