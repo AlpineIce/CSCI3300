@@ -130,14 +130,19 @@ function checkfullhouse(fullseven){
         
 }
 
+
 function checkstright (fullseven){
     // checks for a straight
     let yes = false
     for (let i = 0; i < 3; i++){
-        if (fullseven[i+4]-fullseven[i]==4){
+        if (getRankValue(fullseven[i+4].number)-getRankValue(fullseven[i].number) ==4){
             yes = true;
         }
     }
-    return yes;
+    if (getRankValue(fullseven[6].number == 13)){
+        if (getRankValue(fullseven[0].number)== 2 && getRankValue(fullseven[1].number)==3 && getRankValue(fullseven[2])==4 && getRankValue(fullseven[3].number)==5){
+            yes = true;
+        }
+    }
 }
 
