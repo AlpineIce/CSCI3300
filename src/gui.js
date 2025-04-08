@@ -1,3 +1,4 @@
+import { gameIterate } from "./card_logic.js";
 function getNewCardSprite() {
     const container = document.createElement("div");
     container.classList.add("card");
@@ -87,6 +88,7 @@ function createInteractionContainer() {
     // 
     const checkButton = createButton("Check", "check-button", (value) => {
         console.log("Player checks"); 
+        gameIterate();
     });
 
     //call button
@@ -95,6 +97,7 @@ function createInteractionContainer() {
     // 
     const callButton = createButton("Call", "call-button", (value) => {
         console.log("Player calls");  
+        gameIterate();
     });
 
     //append independent buttons
@@ -105,7 +108,7 @@ function createInteractionContainer() {
     // 
     // ----------TODO TO WHOEVER WORKS ON THIS STUFF NEXT: REMOVE THE INLINE FUNCTIONS AND ADD ACTUAL FUNCTIONALITY TO THEM!!!----------
     // 
-    container.appendChild(createButtonSliderPair(50, 500, (value) => { console.log("Bet: " + value)}, (value) => { console.log("Raise: " + value)}));
+    container.appendChild(createButtonSliderPair(50, 500, (value) => { console.log("Bet: " + value); gameIterate();}, (value) => { console.log("Raise: " + value); gameIterate();}));
 }
 
 function createCommunityCardsContainer() {

@@ -1,6 +1,6 @@
 //checking the player and or players cards and determing what hand they have
 
-function checkplayerhand(playerHand, community){
+export function checkplayerhand(playerHand, community){
     //orer of cards by value
     
     let fullseven = playerHand.concat(community);   
@@ -40,7 +40,7 @@ function getRankValue(numbrer) {
     return values[numbrer] || 0;
 }
 
-function CheckFlush(fullseven){
+function checkflush(fullseven){
     // checks if something is a flush or straight flush
     let hearts = 0;
     let spades = 0; 
@@ -48,7 +48,7 @@ function CheckFlush(fullseven){
     let clubs = 0;
     
     
-    for (y in fullseven){
+    for (let y in fullseven){
         if (y == 'heart'){
             hearts++;
         }
@@ -74,8 +74,8 @@ function CheckFlush(fullseven){
 function checkpair(fullseven){
     // checks if there is a pair
     let pairs = 0;
-    for (y in fullseven){
-        for (x in fullseven){
+    for (let y in fullseven){
+        for (let x in fullseven){
             if (y == x){
                 pairs++;
             }
@@ -87,8 +87,8 @@ function checkpair(fullseven){
 function checkThreeOfAKind(fullseven) {
     // checks if there is three of a kind
     let count = 0;
-    for (y in fullseven){
-        for (x in fullseven){
+    for (let y in fullseven){
+        for (let x in fullseven){
             if (y ==x){
                 count++;
             }
@@ -105,8 +105,8 @@ function checkThreeOfAKind(fullseven) {
 function checkfourofakind(fullseven) {
     // checks if there are four of a kind
     let count = 0;
-    for (y in fullseven){
-        for (x in fullseven){
+    for (let y in fullseven){
+        for (let x in fullseven){
             if (y ==x){
                 count++;
             }
@@ -131,7 +131,7 @@ function checkfullhouse(fullseven){
 }
 
 
-function checkstright (fullseven){
+function checkstraight (fullseven){
     // checks for a straight
     let yes = false
     for (let i = 0; i < 3; i++){
@@ -144,5 +144,6 @@ function checkstright (fullseven){
             yes = true;
         }
     }
+    return yes;
 }
 

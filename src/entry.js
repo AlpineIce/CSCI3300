@@ -1,4 +1,5 @@
 import { initializeGui } from "./gui.js";
+import { gameIterate } from "./card_logic.js";
 
 //should be a button event
 function startGame() {
@@ -7,6 +8,8 @@ function startGame() {
 
     //initialize GUI
     initializeGui();
+
+    gameIterate();
 }
 
 //entry point function
