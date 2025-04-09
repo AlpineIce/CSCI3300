@@ -1,9 +1,111 @@
 import { gameIterate } from "./card_logic.js";
+
 function getNewCardSprite() {
     const container = document.createElement("div");
     container.classList.add("card");
-
     return container;
+}
+
+function createPokerHandTable() {
+    const handTableContainer = document.createElement("div");
+    handTableContainer.id = "poker-hand-table";
+
+    const title = document.createElement("h3");
+    title.innerText = "Poker Hands";
+    handTableContainer.appendChild(title);
+
+    const hands = [
+        { name: "Royal Flush", description: "A, K, Q, J, 10 of the same suit" },
+        { name: "Straight Flush", description: "Five cards in a row, same suit" },
+        { name: "Four of a Kind", description: "Four cards of the same rank" },
+        { name: "Full House", description: "Three of a kind plus a pair" },
+        { name: "Flush", description: "Five cards of the same suit" },
+        { name: "Straight", description: "Five cards in a row, any suits" },
+        { name: "Three of a Kind", description: "Three cards of the same rank" },
+        { name: "Two Pair", description: "Two different pairs" },
+        { name: "One Pair", description: "Two cards of the same rank" },
+        { name: "High Card", description: "When no other hand applies" }
+    ];
+
+    const ul = document.createElement("ul");
+    hands.forEach(hand => {
+        const li = document.createElement("li");
+        li.innerText = hand.name;
+        li.classList.add("tooltip-target");
+        li.dataset.tooltip = hand.description;
+        ul.appendChild(li);
+    });
+
+    handTableContainer.appendChild(ul);
+    document.body.appendChild(handTableContainer);
+
+    const tooltip = document.createElement("div");
+    tooltip.id = "tooltip";
+    tooltip.style.display = "none";
+    document.body.appendChild(tooltip);
+
+    // Tooltip for mouse hover 
+    document.addEventListener("mouseover", (e) => {
+        if (e.target.classList.contains("tooltip-target")) {
+            tooltip.innerText = e.target.dataset.tooltip;
+            tooltip.style.display = "block";
+        }
+    });
+
+    document.addEventListener("mousemove", (e) => {
+        tooltip.style.left = e.pageX + 10 + "px";
+        tooltip.style.top = e.pageY + 10 + "px";
+    });
+
+    document.addEventListener("mouseout", (e) => {
+        if (e.target.classList.contains("tooltip-target")) {
+            tooltip.style.display = "none";
+        }
+    });
+
+    const style = document.createElement("style");
+    style.textContent = `
+        #poker-hand-table {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            width: 160px;
+            padding: 10px;
+            background: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        #poker-hand-table h3 {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        #poker-hand-table ul {
+            padding-left: 16px;
+            margin: 0;
+        }
+
+        #poker-hand-table li {
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        #tooltip {
+            position: absolute;
+            background-color: #222;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 function createInteractionContainer() {
@@ -11,104 +113,73 @@ function createInteractionContainer() {
     container.id = "button-container"
     document.body.appendChild(container);
 
-    //Create a slider with a min, max, and default value
     function createSliderContainer(min, max) {
         const startingValue = min;
-
-        //create label
         const label = document.createElement("label");
         label.innerText = `Amount: ${startingValue}`;
 
-        //then create slider
         const slider = document.createElement("input");
         slider.id = "bet-raise-slider";
         slider.type = "range";
         slider.min = min;
         slider.max = max;
         slider.value = startingValue;
-        
-        //slider event
+
         slider.addEventListener("input", () => {
             label.innerText = `Amount: ${slider.value}`;
         });
 
-        //create container for label and slider
         const sliderContainer = document.createElement("div");
         sliderContainer.id = "slider-container";
-
-        // Append label and slider to the container
         sliderContainer.appendChild(label);
         sliderContainer.appendChild(slider);
-
         return sliderContainer;
     }
 
-    //button helper class
     function createButton(label, id, onClick) {
         const button = document.createElement("button");
         button.id = id;
         button.innerText = label;
         button.addEventListener("click", () => {
-            //call event with the value of the slider as a parameter
             const value = document.getElementById("bet-raise-slider").value;
             onClick(value);
         });
-
         return button;
     }
 
     function createBetRaiseContainer(betEvent, raiseEvent) {
-        //create div
         const container = document.createElement("div");
         container.id = "bet-raise-buttons-container"
-
-        //create bet and raise buttons
         container.appendChild(createButton("Bet", "bet-button", betEvent));
         container.appendChild(createButton("Raise", "raise-button", raiseEvent));
-
         return container;
     }
 
-    //betEvent and raiseEvents take in the value of the slider as the only parameter
     function createButtonSliderPair(min, max, betEvent, raiseEvent) {
-        //create div
         const container = document.createElement("div");
         container.id = "buttons-with-slider-container";
-
-        // Create slider and buttons containers
         container.appendChild(createSliderContainer(min, max));
         container.appendChild(createBetRaiseContainer(betEvent, raiseEvent));
-
         return container;
     }
 
-    //check button
-    // 
-    // ----------TODO TO WHOEVER WORKS ON THIS STUFF NEXT: REMOVE THE INLINE FUNCTIONS AND ADD ACTUAL FUNCTIONALITY TO THEM!!!----------
-    // 
     const checkButton = createButton("Check", "check-button", (value) => {
-        console.log("Player checks"); 
+        console.log("Player checks");
         gameIterate();
     });
 
-    //call button
-    // 
-    // ----------TODO TO WHOEVER WORKS ON THIS STUFF NEXT: REMOVE THE INLINE FUNCTIONS AND ADD ACTUAL FUNCTIONALITY TO THEM!!!----------
-    // 
     const callButton = createButton("Call", "call-button", (value) => {
-        console.log("Player calls");  
+        console.log("Player calls");
         gameIterate();
     });
 
-    //append independent buttons
     container.appendChild(checkButton);
     container.appendChild(callButton);
 
-    //append buttons that use slider 
-    // 
-    // ----------TODO TO WHOEVER WORKS ON THIS STUFF NEXT: REMOVE THE INLINE FUNCTIONS AND ADD ACTUAL FUNCTIONALITY TO THEM!!!----------
-    // 
-    container.appendChild(createButtonSliderPair(50, 500, (value) => { console.log("Bet: " + value); gameIterate();}, (value) => { console.log("Raise: " + value); gameIterate();}));
+    container.appendChild(createButtonSliderPair(50, 500, 
+        (value) => { console.log("Bet: " + value); gameIterate(); }, 
+        (value) => { console.log("Raise: " + value); gameIterate(); }
+    ));
 }
 
 function createCommunityCardsContainer() {
@@ -116,11 +187,9 @@ function createCommunityCardsContainer() {
     container.id = "community-cards-container"
     document.body.appendChild(container);
 
-    container.appendChild(getNewCardSprite());
-    container.appendChild(getNewCardSprite());
-    container.appendChild(getNewCardSprite());
-    container.appendChild(getNewCardSprite());
-    container.appendChild(getNewCardSprite());
+    for (let i = 0; i < 5; i++) {
+        container.appendChild(getNewCardSprite());
+    }
 }
 
 function createHoleCardsContainer() {
@@ -132,14 +201,9 @@ function createHoleCardsContainer() {
     container.appendChild(getNewCardSprite());
 }
 
-//Function to initialize the buttons and sliders
 export function initializeGui() {
-    //add button container
+    createPokerHandTable();
     createInteractionContainer();
-    
-    //create community cards container
     createCommunityCardsContainer();
-
-    //create hole cards container
     createHoleCardsContainer();
 }
