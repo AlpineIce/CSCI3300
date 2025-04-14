@@ -153,6 +153,7 @@ function createInteractionContainer() {
 function createCommunityCardsContainer() {
     const container = document.createElement("div");
     container.id = "community-cards-container"
+    container.classList.add("card-container");
     document.body.appendChild(container);
 
     for (let i = 0; i < 5; i++) {
@@ -163,6 +164,17 @@ function createCommunityCardsContainer() {
 function createHoleCardsContainer() {
     const container = document.createElement("div");
     container.id = "hole-cards-container"
+    container.classList.add("card-container");
+    document.body.appendChild(container);
+
+    container.appendChild(getNewCardSprite());
+    container.appendChild(getNewCardSprite());
+}
+
+function createDealerCardsContainer() {
+    const container = document.createElement("div");
+    container.id = "dealer-cards-container";
+    container.classList.add("card-container");
     document.body.appendChild(container);
 
     container.appendChild(getNewCardSprite());
@@ -174,4 +186,5 @@ export function initializeGui() {
     createInteractionContainer();
     createCommunityCardsContainer();
     createHoleCardsContainer();
+    createDealerCardsContainer();
 }
