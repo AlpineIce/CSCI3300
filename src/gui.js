@@ -129,12 +129,24 @@ function createInteractionContainer() {
         gameIterate();
     });
 
+    const foldButton = createButton("Fold", "fold-button", () => {
+        console.log("Player folds");
+        gameIterate();
+    });
+
     container.appendChild(checkButton);
     container.appendChild(callButton);
+    container.appendChild(foldButton);
 
     container.appendChild(createButtonSliderPair(50, 500, 
-        (value) => { console.log("Bet: " + value); gameIterate(); }, 
-        (value) => { console.log("Raise: " + value); gameIterate(); }
+        //bet event
+        (value) => {
+            console.log("Bet: " + value); gameIterate();
+        },
+        //raise event
+        (value) => {
+            console.log("Raise: " + value); gameIterate();
+        }
     ));
 }
 
