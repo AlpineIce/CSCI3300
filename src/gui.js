@@ -1,8 +1,12 @@
 import { gameIterate } from "./card_logic.js";
 
-function getNewCardSprite() {
+function getNewCardSprite(elemId) {
     const container = document.createElement("div");
     container.classList.add("card");
+    let img = document.createElement("img");
+    img.id = elemId;
+    img.src = "./Cards/B1.svg";
+    container.appendChild(img);
     return container;
 }
 
@@ -156,9 +160,12 @@ function createCommunityCardsContainer() {
     container.classList.add("card-container");
     document.body.appendChild(container);
 
-    for (let i = 0; i < 5; i++) {
-        container.appendChild(getNewCardSprite());
-    }
+    container.appendChild(getNewCardSprite("communityOne"));
+    container.appendChild(getNewCardSprite("communityTwo"));
+    container.appendChild(getNewCardSprite("communityThree"));
+    container.appendChild(getNewCardSprite("communityFour"));
+    container.appendChild(getNewCardSprite("communityFive"));
+    
 }
 
 function createHoleCardsContainer() {
@@ -167,8 +174,8 @@ function createHoleCardsContainer() {
     container.classList.add("card-container");
     document.body.appendChild(container);
 
-    container.appendChild(getNewCardSprite());
-    container.appendChild(getNewCardSprite());
+    container.appendChild(getNewCardSprite("holeOne"));
+    container.appendChild(getNewCardSprite("holeTwo"));
 }
 
 function createDealerCardsContainer() {
@@ -177,8 +184,8 @@ function createDealerCardsContainer() {
     container.classList.add("card-container");
     document.body.appendChild(container);
 
-    container.appendChild(getNewCardSprite());
-    container.appendChild(getNewCardSprite());
+    container.appendChild(getNewCardSprite("dealerOne"));
+    container.appendChild(getNewCardSprite("dealerTwo"));
 }
 
 export function initializeGui() {
