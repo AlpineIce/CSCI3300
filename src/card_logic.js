@@ -1,4 +1,11 @@
 import { checkplayerhand } from "./hand_check.js"
+import './chips.js';
+import './players.js'
+import { player } from "./players.js";
+import { createEndRoundContainer } from "./gui.js";
+import { removeEndRoundContainer } from "./gui.js";
+import { removeGame } from "./gui.js";
+import { createHomePage } from "./gui.js";
 //initiallize the deck as an array of objects representing each card
 const deck = [ {suit : 'heart', number : '2', svgRef : './Cards/H2.svg'}, {suit : 'heart', number : '3', svgRef : './Cards/H3.svg'}, {suit : 'heart', number : '4', svgRef : './Cards/H4.svg'}, {suit : 'heart', number : '5', svgRef : './Cards/H5.svg'}, {suit : 'heart', number : '6', svgRef : './Cards/H6.svg'}, {suit : 'heart', number : '7', svgRef : './Cards/H7.svg'}, {suit : 'heart', number : '8', svgRef : './Cards/H8.svg'}, {suit : 'heart', number : '9', svgRef : './Cards/H9.svg'}, {suit : 'heart', number : '10', svgRef : './Cards/H10.svg'}, {suit : 'heart', number : 'jack', svgRef : './Cards/HJ.svg'}, {suit : 'heart', number : 'queen', svgRef : './Cards/HQ.svg'}, {suit : 'heart', number : 'king', svgRef : './Cards/HK.svg'}, {suit : 'heart', number : 'ace', svgRef : './Cards/HA.svg'},
     {suit : 'spade', number : '2', svgRef : './Cards/S2.svg'}, {suit : 'spade', number : '3', svgRef : './Cards/S3.svg'}, {suit : 'spade', number : '4', svgRef : './Cards/S4.svg'}, {suit : 'spade', number : '5', svgRef : './Cards/S5.svg'}, {suit : 'spade', number : '6', svgRef : './Cards/S6.svg'}, {suit : 'spade', number : '7', svgRef : './Cards/S7.svg'}, {suit : 'spade', number : '8', svgRef : './Cards/S8.svg'}, {suit : 'spade', number : '9', svgRef : './Cards/S9.svg'}, {suit : 'spade', number : '10', svgRef : './Cards/S10.svg'}, {suit : 'spade', number : 'jack', svgRef : './Cards/SJ.svg'}, {suit : 'spade', number : 'queen', svgRef : './Cards/SQ.svg'}, {suit : 'spade', number : 'king', svgRef : './Cards/SK.svg'}, {suit : 'spade', number : 'ace', svgRef : './Cards/SA.svg'},
@@ -8,10 +15,15 @@ const deck = [ {suit : 'heart', number : '2', svgRef : './Cards/H2.svg'}, {suit 
 
 //initiallize discard pile, community pile, and player hand as an array
 let discard = [];
-let playerHand = [];
-let dealerHand = [];
+let playerOne = new player;
+playerOne.hand = []
+playerOne.chips = 1000;
+let dealer = new player;
+dealer.hand = [];
+dealer.chips = 10000;
 let community = [];
 let gameState = 0;
+let end;
 
 //create a random number between 0 and 51 to draw a card, regenerate if card is in the discard
 function drawCard(){
@@ -29,21 +41,21 @@ export function gameStart(){
     for (let i = 0; i < 2; i++){
         let card = drawCard();
         discard.push(card);
-        playerHand.push(deck[card]);
+        playerOne.hand.push(deck[card]);
         console.log(deck[card]);
     }
     for (let i = 0; i < 2; i++){
         let card = drawCard();
         discard.push(card);
-        dealerHand.push(deck[card]);
+        dealer.hand.push(deck[card]);
         console.log(deck[card]);
     }
-    document.getElementById("holeOne").src = playerHand[0].svgRef;
-    document.getElementById("holeTwo").src = playerHand[1].svgRef;
-    for(let x in playerHand)
-        console.log("player hand index: " + x + " = " + playerHand[x].number + " " + playerHand[x].suit);
-    for(let x in dealerHand)
-        console.log("dealer hand index: " + x + " = " + dealerHand[x].number + " " + dealerHand[x].suit);
+    document.getElementById("holeOne").src = playerOne.hand[0].svgRef;
+    document.getElementById("holeTwo").src = playerOne.hand[1].svgRef;
+    for(let x in playerOne.hand)
+        console.log("player hand index: " + x + " = " + playerOne.hand[x].number + " " + playerOne.hand[x].suit);
+    for(let x in dealer.hand)
+        console.log("dealer hand index: " + x + " = " + dealer.hand[x].number + " " + dealer.hand[x].suit);
 }
 
 //draw the flop, three cards to the community, First
@@ -68,20 +80,35 @@ export function oneCard(){
         console.log("community index: " + x + " = " + community[x].number + " " + community[x].suit);
 }
 
-//empty the arrays at the end of a game
-export function gameEnd(){
-    console.log("Ending game...")
+//empty the arrays at the end of a round
+export function roundEnd(){
+    console.log("Ending round...")
     discard = [];
-    playerHand = [];
-    dealerHand = [];
+    playerOne.hand = [];
+    dealer.hand = [];
     community = [];
     gameState = 0;
-    for(let x in playerHand)
-        console.log("player hand index: " + x + " = " + playerHand[x].number + " " + playerHand[x].suit);
-    for(let x in dealerHand)
-        console.log("dealer hand index: " + x + " = " + dealerHand[x].number + " " + dealerHand[x].suit);
+    for(let x in playerOne.hand)
+        console.log("player hand index: " + x + " = " + playerOne.hand[x].number + " " + playerOne.hand[x].suit);
+    for(let x in dealer.hand)
+        console.log("dealer hand index: " + x + " = " + dealer.hand[x].number + " " + dealer.hand[x].suit);
     for(let x in community)
         console.log("community index: " + x + " = " + community[x].number + " " + community[x].suit);
+    let cards = document.querySelectorAll(".card");
+    for(let x = 0; x < cards.length; x++){
+        cards[x].querySelector("img").src = "./Cards/B1.svg";
+    }
+}
+
+function reveal(){
+    document.getElementById("dealerOne").src = dealer.hand[0].svgRef;
+    document.getElementById("dealerTwo").src = dealer.hand[1].svgRef;
+}
+
+function endGame(){
+    roundEnd();
+    removeGame();
+    createHomePage();
 }
 
 export function gameIterate(){
@@ -104,14 +131,31 @@ export function gameIterate(){
         gameState++;
     }
     else if(gameState == 4){
+        reveal();
         // TODO -- player hand vs dealer hand
-        console.log(checkplayerhand(playerHand, community));
-        console.log(checkplayerhand(dealerHand, community));
+        console.log(checkplayerhand(playerOne.hand, community));
+        console.log(checkplayerhand(dealer.hand, community));
         // TODO -- results
-
-        // TODO -- return to start game screen
-
-        gameEnd();
+        const buttons = document.getElementsByTagName("button");
+        for(const button of buttons){button.disabled = true;}
+        createEndRoundContainer();
+        document.getElementById("newRoundButton").addEventListener("click", () => {
+            console.log("newround")
+            removeEndRoundContainer();
+            roundEnd();
+            const buttons = document.getElementsByTagName("button");
+            for(const button of buttons){button.disabled = false;}
+        });
+        document.getElementById("endGameButton").addEventListener("click", () => {
+            console.log("endGame")
+            removeEndRoundContainer();
+            endGame();
+            const buttons = document.getElementsByTagName("button");
+            for(const button of buttons){button.disabled = false;}
+        });
+    }
+    else if(gameState == 5){
+        endGame;
     }
     console.log("End iteration...");
 }

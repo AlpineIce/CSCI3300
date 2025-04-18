@@ -31,6 +31,7 @@ body {
     padding: 10px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 4;
 
     button {
         margin: 5px;
@@ -53,17 +54,20 @@ body {
     top: 200px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 1;
 }
 
 #hole-cards-container {
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 3;
 }
 
 #dealer-cards-container {
     bottom: 40px;
     left: 40px;
+    z-index: 2;
 
     .card {
         width: 120px;
@@ -109,6 +113,7 @@ body {
     border-radius: 8px;
     font-family: Arial, sans-serif;
     font-size: 14px;
+    z-index: 0;
 
     h3 {
         margin-bottom: 8px;
@@ -140,4 +145,36 @@ body {
 
 .card img{
     width:  150px;
+}
+
+#endRoundContainer{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100px;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10%;
+    z-index: 1000;
+}
+
+#newRoundButton {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10%;
+    box-shadow: 2px 2px;
+}
+
+#endGameButton {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10%;
+    box-shadow: 2px 2px;
 }

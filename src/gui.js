@@ -1,4 +1,5 @@
 import { gameIterate } from "./card_logic.js";
+import { startGame } from "./entry.js";
 
 function getNewCardSprite(elemId) {
     const container = document.createElement("div");
@@ -70,7 +71,7 @@ function createPokerHandTable() {
 
 function createInteractionContainer() {
     const container = document.createElement("div");
-    container.id = "button-container"
+    container.id = "button-container";
     document.body.appendChild(container);
 
     function createSliderContainer(min, max) {
@@ -188,6 +189,51 @@ function createDealerCardsContainer() {
     container.appendChild(getNewCardSprite("dealerTwo"));
 }
 
+export function createEndRoundContainer(){
+    const container = document.createElement("div");
+    container.id = "endRoundContainer"
+    document.body.appendChild(container);
+    
+    const newRound = document.createElement("button");
+    newRound.id = "newRoundButton"
+    document.getElementById("endRoundContainer").appendChild(newRound);
+    let text = document.createElement("strong");
+    text.innerText = "Play New Round?";
+    document.getElementById("newRoundButton").appendChild(text);
+
+    const endGame = document.createElement("button");
+    endGame.id = "endGameButton";
+    document.getElementById("endRoundContainer").appendChild(endGame);
+    text = document.createElement("strong");
+    text.innerText = "End Game?";
+    document.getElementById("endGameButton").appendChild(text);
+}
+
+export function removeEndRoundContainer(){
+    document.getElementById("endRoundContainer").remove();
+}
+
+export function removeGame(){
+    document.getElementById("poker-hand-table").remove();
+    document.getElementById("tooltip").remove();
+    document.getElementById("button-container").remove();
+    document.getElementById("community-cards-container").remove();
+    document.getElementById("hole-cards-container").remove();
+    document.getElementById("dealer-cards-container").remove();
+}
+
+export function createHomePage(){
+    const startButtonContainer = document.createElement("div");
+    startButtonContainer.id = "start-button-container";
+    document.body.appendChild(startButtonContainer);
+
+    const startButton = document.createElement("button");
+    startButton.type = "button";
+    startButton.id = "start-button";
+    startButton.innerText = "Start Game";
+    startButton.addEventListener("click", () => {startGame();})
+    document.getElementById("start-button-container").appendChild(startButton);
+}
 export function initializeGui() {
     createPokerHandTable();
     createInteractionContainer();
