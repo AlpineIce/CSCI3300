@@ -24,7 +24,7 @@ export function checkplayerhand(playerhand, community){
             hand_value = "full house";
         }else if (checkThreeOfAKind(fullseven)){
             hand_value = "three of a kind";
-            }else if (checkpair(fullseven) == 2){
+            }else if (checkpair(fullseven) >= 2){
                 hand_value = "two pair";
             }else if (checkpair(fullseven) == 1){
                 hand_value = "one pair";
@@ -88,7 +88,7 @@ function checkflush(fullseven){
 function checkpair(fullseven){
     // checks if there is a pair
     let pairs = 0;
-    for (let i = 0; i < fullseven.length; i++){
+    for (let i = 0; i <= fullseven.length - 2; i++){
         if (fullseven[i].number == fullseven[i+1].number){
             pairs++;
         }
@@ -99,7 +99,7 @@ function checkpair(fullseven){
 function checkThreeOfAKind(fullseven) {
     // checks if there is three of a kind
     let value = false
-    for (let i = 0; i < fullseven.length; i++){
+    for (let i = 0; i <= fullseven.length - 3; i++){
         if (fullseven[i].number == fullseven[i+1].number && fullseven[i].number == fullseven[i+2].number){
             value = true;
         }
@@ -111,7 +111,7 @@ function checkThreeOfAKind(fullseven) {
 function checkfourofakind(fullseven) {
     // checks if there are four of a kind
     let value = false
-    for (let i = 0; i < fullseven.length; i++){
+    for (let i = 0; i <= fullseven.length - 4 ; i++){
         if (fullseven[i].number == fullseven[i+1].number && fullseven[i].number == fullseven[i+2].number && fullseven[i].number == fullseven[i+3].number){
             value = true;
          }
@@ -121,19 +121,33 @@ function checkfourofakind(fullseven) {
 
 function checkfullhouse(fullseven){
     // checks for a full house
-    if (((fullseven[1].number == fullseven[2].number && fullseven[1].number == fullseven[3].number) && (fullseven[4].number == fullseven[5].number)) || ((fullseven[1].number == fullseven[2].number) && (fullseven[3].number == fullseven[4].number && fullseven[3].number == fullseven[5].number))) {
-        return true;
-    } else {
-        return false
+    let pairs = 0;
+    let tripples = 0;
+    let heldrank;
+
+    for (let i = 0; i <= fullseven.length - 3; i++){
+        if (fullseven[i].number == fullseven[i+1].number && fullseven[i].number == fullseven[i+2].number){
+           heldrank = fullseven[i].number;
+            tripples++;
+        }
     }
-        
+    for (let i = 0; i <= fullseven.length - 2; i++){
+        if (fullseven[i].number == fullseven[i+1].number && fullseven[i].number != heldrank){
+            pairs++;
+        }
+    }
+    if (tripples >= 1 && pairs >= 1){
+        return true;}
+    else {
+        return false;
+    }
 }
 
 
 function checkstraight (fullseven){
     // checks for a straight
     let value = false
-    for (let i = 0; i < 3; i++){
+    for (let i = 0; i <= fullseven.length - 5; i++){
         if (getRankValue(fullseven[i+4].number)-getRankValue(fullseven[i].number) ==4){
             value = true;
         }
@@ -143,7 +157,7 @@ function checkstraight (fullseven){
             value = true;
         }
     }
-    return yes;
+    return value;
 }
 
 function return_highcard (fullseven, hand_value){
@@ -153,25 +167,25 @@ function return_highcard (fullseven, hand_value){
         returned_highcard = fullseven[6].number;
     }
     else if (hand_value == "one pair"){
-        for (let i = 0; i < fullseven.length; i++){
+        for (let i = 0; i <= fullseven.length - 2; i++){
             if (fullseven[i].number == fullseven[i+1].number){
                 returned_highcard = fullseven[i].number;
             }
         }
     }
     else if (hand_value == "two pair"){
-        pairs = 0;
-        for (let i = 0; i < fullseven.length; i++){
-            if (fullseven[i] == fullseven[i+1]){
-                pairs++;
-                if (pairs == 2){
-                    returned_highcard = fullseven[i].number
+        let heldrank = 0;
+        for (let i = 0; i <= fullseven.length - 2; i++){
+            if (fullseven[i].number == fullseven[i+1].number){
+                heldrank = fullseven[i].number;
                 }
             }
+            returned_highcard = heldrank;
         }
-    }
+        
+    
     else if (hand_value == "three of a kind"){
-        for (let i = 0; i < fullseven.length; i++){
+        for (let i = 0; i <= fullseven.length - 3; i++){
             if (fullseven[i].number == fullseven[i+1].number && fullseven[i].number == fullseven[i+2].number){
                 returned_highcard = fullseven[i].number;
             }
@@ -179,7 +193,7 @@ function return_highcard (fullseven, hand_value){
 
     }
     else if (hand_value == "straight"){
-        for (let i = 0; i < 3; i++){
+        for (let i = 0; i <= fullseven.length - 5; i++){
         if (getRankValue(fullseven[i+4].number)-getRankValue(fullseven[i].number) ==4){
             returned_highcard = fullseven[i+4].number;
         }
@@ -191,14 +205,14 @@ function return_highcard (fullseven, hand_value){
     }
     }
     else if (hand_value == "four of a kind"){
-        for (let i = 0; i < fullseven.length; i++){
+        for (let i = 0; i <= fullseven.length - 4 ; i++){
             if (fullseven[i].number == fullseven[i+1].number && fullseven[i].number == fullseven[i+2].number && fullseven[i].number == fullseven[i+3].number){
                 returned_highcard = fullseven[i].number;
              }
         }
     }
     else if (hand_value == "full house"){
-        for (let i = 0; i < fullseven.length; i++){
+        for (let i = 0; i <= fullseven.length - 3; i++){
             if (fullseven[i].number == fullseven[i+1].number && fullseven[i].number == fullseven[i+2].number){
                 returned_highcard = fullseven[i].number;
             }
@@ -236,14 +250,14 @@ function return_highcard (fullseven, hand_value){
         else if (clubs >= 5){
             high_suit = 'club';}
 
-        for (let i = 6; i >= 0; i--){
+        for (let i = fullseven.length - 1; i >= 0; i--){
             if (fullseven[i].suit == high_suit){
                 returned_highcard = fullseven[i].number;
             }
         }
     }
     else if (hand_value == "straight flush"){
-        for (let i = 0; i < 3; i++){
+        for (let i = 0; i <= fullseven.length - 5; i++){
             if (getRankValue(fullseven[i+4].number)-getRankValue(fullseven[i].number) ==4){
                 returned_highcard = fullseven[i+4].number;
             }
