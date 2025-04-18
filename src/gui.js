@@ -197,15 +197,15 @@ export function createEndRoundContainer(){
     const newRound = document.createElement("button");
     newRound.id = "newRoundButton"
     document.getElementById("endRoundContainer").appendChild(newRound);
-    let text = document.createElement("strong");
-    text.innerText = "Play New Round?";
+    let text = document.createElement("p");
+    text.innerText = "New Round";
     document.getElementById("newRoundButton").appendChild(text);
 
     const endGame = document.createElement("button");
     endGame.id = "endGameButton";
     document.getElementById("endRoundContainer").appendChild(endGame);
-    text = document.createElement("strong");
-    text.innerText = "End Game?";
+    text = document.createElement("p");
+    text.innerText = "End Game";
     document.getElementById("endGameButton").appendChild(text);
 }
 
