@@ -45,7 +45,7 @@ export function checkplayerhand(playerhand, community){
 
 
     }
-function getRankValue(number) {
+export function getRankValue(number) {
     // gives me rank values so i can sort them
     const values = {
         '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
