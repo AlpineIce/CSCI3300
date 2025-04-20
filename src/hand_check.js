@@ -10,20 +10,16 @@ export function checkplayerhand(playerhand, community){
     let highcard;
 
     
-    if (checkflush(fullseven)){
-        if (checkstriaght(fullseven)){
-            hand_value= "straight flush";
-        }else {
-            hand_value= "flush";
-        }
-    }else {}
-    
-    if (checkfourofakind(fullseven)){
-            hand_value = "four of a kind";
-    }else if (checkfullhouse(fullseven)){
-            hand_value = "full house";
+    if (checkflush(fullseven) && checkstraight(fullseven)){
+            hand_value = "straight flush";
+        }else if (checkflush(fullseven)){
+                hand_value = "flush";
+        }else if (checkfourofakind(fullseven)){
+                hand_value = "four of a kind";
+        }else if (checkfullhouse(fullseven)){
+                hand_value = "full house";
         }else if (checkThreeOfAKind(fullseven)){
-            hand_value = "three of a kind";
+                hand_value = "three of a kind";
             }else if (checkpair(fullseven) >= 2){
                 hand_value = "two pair";
             }else if (checkpair(fullseven) == 1){
@@ -62,7 +58,7 @@ function checkflush(fullseven){
     let clubs = 0;
     
     
-    for (let y in fullseven){
+    for (let y of fullseven){
         if (y.suit == 'heart'){
             hearts++;
         }
@@ -77,6 +73,7 @@ function checkflush(fullseven){
         }
 
     }
+
     if (hearts >=5 || spades >= 5 || diamonds >= 5 || clubs >= 5){
         return true;
     }
@@ -225,7 +222,7 @@ function return_highcard (fullseven, hand_value){
         let clubs = 0;
     
     
-        for(let y in fullseven){
+        for(let y of fullseven){
             if (y.suit == 'heart'){
                 hearts++;
             }
@@ -250,7 +247,7 @@ function return_highcard (fullseven, hand_value){
         else if (clubs >= 5){
             high_suit = 'club';}
 
-        for (let i = fullseven.length - 1; i >= 0; i--){
+        for (let i = 0; i <= fullseven.length - 1; i++){
             if (fullseven[i].suit == high_suit){
                 returned_highcard = fullseven[i].number;
             }
