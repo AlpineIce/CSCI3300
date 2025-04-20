@@ -1,4 +1,4 @@
-import { checkplayerhand } from "./hand_check.js"
+import { checkplayerhand, decide_twopair_kicker, full_house_kicker, getcardsforkicker, twopair_kicker, kicker } from "./hand_check.js"
 import './chips.js';
 import './players.js'
 import { player } from "./players.js";
@@ -137,8 +137,85 @@ function compareHands(playerHand, dealerHand){
             console.log("dealer wins");
             return "dealer wins with a high card of" + dealerHand.highcard;
         }
-        else{console.log("tie");return "tie"}
-    }
+        else {
+                if (playerHand.hand_value == "two pair" && dealerHand.hand_value == "two pair"){
+                    var result = decide_twopair_kicker(
+                        twopair_kicker(playerOne.hand, community),
+                        twopair_kicker(dealer.hand, community)
+                    );
+                    if (result[0] ==   "player 1 wins"){
+                        console.log("player wins")
+                        return "player wins with two pair kicker of " + result[1]
+                    }else if (result[0] == "player 2 wins"){
+                            console.log("dealer wins")
+                            return "dealer wins with two pair kicker of " + result[1]
+                    }else {  var kickerResult = kicker(
+                        getcardsforkicker(playerOne.hand, community),
+                        getcardsforkicker(dealer.hand, community)
+                    ) || ["tie", 0];  // Fallback if kicker returns undefined
+                    
+                    if (kickerResult[0] == "player 1 wins"){
+                        console.log("player wins")
+                        return "player wins with a kicker of " + kickerResult[1]
+                    }else if (kickerResult[0] == "player 2 wins"){
+                        console.log("dealer wins")
+                        return "dealer wins with a kicker of " + kickerResult[1]
+                    }else {
+                        console.log("tie")
+                        return "tie"
+                    }
+                    }
+
+                } else if (playerHand.hand_value == "full house" && dealerHand.hand_value == "full house"){
+                        var playerfullHouseKicker = full_house_kicker(playerOne.hand, community);
+                        var dealerfullHouseKicker = full_house_kicker(dealer.hand, community);
+
+                        if (playerfullHouseKicker > dealerfullHouseKicker){
+                            console.log("player wins")
+                            return "player wins with a full house kicker of " + playerfullHouseKicker
+                        }
+                        else if (dealerfullHouseKicker > playerfullHouseKicker){
+                            console.log("dealer wins")
+                            return "dealer wins with a full house kicker of " + dealerfullHouseKicker
+                        }else {var kickerResult = kicker(
+                            getcardsforkicker(playerOne.hand, community),
+                            getcardsforkicker(dealer.hand, community)
+                        ) || ["tie", 0];  // Fallback if kicker returns undefined
+                        
+                        if (kickerResult[0] == "player 1 wins"){
+                            console.log("player wins")
+                            return "player wins with a kicker of " + kickerResult[1]
+                        }else if (kickerResult[0] == "player 2 wins"){
+                            console.log("dealer wins")
+                            return "dealer wins with a kicker of " + kickerResult[1]
+                        }else {
+                            console.log("tie")
+                            return "tie"
+                        }
+                    
+
+                        }
+
+
+                }else {
+                    var kickerResult = kicker(
+                        getcardsforkicker(playerOne.hand, community),
+                        getcardsforkicker(dealer.hand, community)
+                    ) || ["tie", 0];  // Fallback if kicker returns undefined
+                    
+                    if (kickerResult[0] == "player 1 wins"){
+                        console.log("player wins")
+                        return "player wins with a kicker of " + kickerResult[1]
+                    }else if (kickerResult[0] == "player 2 wins"){
+                        console.log("dealer wins")
+                        return "dealer wins with a kicker of " + kickerResult[1]
+                    }else {
+                        console.log("tie")
+                        return "tie"
+                    }
+                }
+            }
+        }
 }
 
 export function gameIterate(){
