@@ -145,9 +145,11 @@ function checkstraight(fullseven) {
     // Get unique ranks sorted low to high
     const uniqueRanks = [...new Set(fullseven.map(card => getRankValue(card.number)))].sort((a,b) => a-b);
     
-    // Check for normal straights (5 consecutive cards)
     for (let i = 0; i <= uniqueRanks.length - 5; i++) {
-        if (uniqueRanks[i+4] - uniqueRanks[i] === 4) {
+        if (uniqueRanks[i+1] === uniqueRanks[i]+1 &&
+            uniqueRanks[i+2] === uniqueRanks[i]+2 &&
+            uniqueRanks[i+3] === uniqueRanks[i]+3 &&
+            uniqueRanks[i+4] === uniqueRanks[i]+4) {
             return true;
         }
     }
@@ -194,16 +196,27 @@ function return_highcard (fullseven, hand_value){
 
     }
     else if (hand_value == "straight"){
-            for (let i = 0; i <= fullseven.length - 5; i++){
-                if (getRankValue(fullseven[i+1].number)-getRankValue(fullseven[i].number) == 1 && getRankValue(fullseven[i+2].number)-getRankValue(fullseven[i].number) == 2 && getRankValue(fullseven[i+3].number)-getRankValue(fullseven[i].number) == 3 && getRankValue(fullseven[i+4].number)-getRankValue(fullseven[i].number) == 4){
-                returned_highcard = fullseven[i+4].number;
-        }
-    }
-        if (getRankValue(fullseven[6].number == 13)){
-            if (getRankValue(fullseven[0].number)== 2 && getRankValue(fullseven[1].number)==3 && (fullseven[2].number)==4 && (fullseven[3].number)==5){
-                returned_highcard = 5;
-        }
-    }
+            // Get unique ranks sorted low to high
+            const uniqueRanks = [...new Set(fullseven.map(card => getRankValue(card.number)))].sort((a,b) => a-b);
+            
+            for (let i = 0; i <= uniqueRanks.length - 5; i++) {
+                if (uniqueRanks[i+1] === uniqueRanks[i]+1 &&
+                    uniqueRanks[i+2] === uniqueRanks[i]+2 &&
+                    uniqueRanks[i+3] === uniqueRanks[i]+3 &&
+                    uniqueRanks[i+4] === uniqueRanks[i]+4) {
+                    returned_highcard = uniqueRanks[i+4]; // Return the highest card in the straight
+                }
+            }
+            
+            // Special case for Ace-low straight (A-2-3-4-5)
+            if (uniqueRanks.includes(14)) { // Check if Ace is present
+                const hasAceLow = [2,3,4,5].every(rank => uniqueRanks.includes(rank));
+                if (hasAceLow) {
+                    returned_highcard = 5; // Return the highest card in the Ace-low straight (5)
+
+                };
+            }
+        
     }
     else if (hand_value == "four of a kind"){
         for (let i = 0; i <= fullseven.length - 4 ; i++){
