@@ -14,6 +14,13 @@ function getNewCardSprite(elemId) {
 function createPokerHandTable() {
     const handTableContainer = document.createElement("div");
     handTableContainer.id = "poker-hand-table";
+    handTableContainer.style.backgroundColor = "black";
+    handTableContainer.style.color = "white";
+    handTableContainer.style.padding = "1em";
+    handTableContainer.style.borderRadius = "10px";
+    handTableContainer.style.maxWidth = "300px";
+    handTableContainer.style.margin = "2em auto";
+    handTableContainer.style.fontFamily = "Arial, sans-serif";
 
     const title = document.createElement("h3");
     title.innerText = "Poker Hands";
