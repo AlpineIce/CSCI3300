@@ -1,7 +1,7 @@
 import { checkplayerhand, decide_twopair_kicker, full_house_kicker, getcardsforkicker, twopair_kicker, kicker } from "./hand_check.js"
 import './chips.js';
 import './players.js'
-import { player } from "./players.js";
+import { Player } from "./players.js";
 import { createEndRoundContainer } from "./gui.js";
 import { removeEndRoundContainer } from "./gui.js";
 import { removeGame } from "./gui.js";
@@ -16,10 +16,10 @@ const deck = [ {suit : 'heart', number : '2', svgRef : './Cards/H2.svg'}, {suit 
 
 //initiallize discard pile, community pile, and player hand as an array
 let discard = [];
-let playerOne = new player;
+let playerOne = new Player;
 playerOne.hand = []
 playerOne.chips = 1000;
-let dealer = new player;
+let dealer = new Player;
 dealer.hand = [];
 dealer.chips = 10000;
 let community = [];
@@ -27,32 +27,38 @@ let gameState = 0;
 let end;
 
 //create a random number between 0 and 51 to draw a card, regenerate if card is in the discard
-function drawCard(){
+function drawCard() {
     let card = Math.floor(Math.random() * 52);
     console.log("drawing card...")
+
     if(discard.includes(card)) {
         card = drawCard();
     }
+
     return card;
 }
 
 //draw two cards to the player and dealer hand
-export function gameStart(){
+export function gameStart() {
     console.log("Starting game...")
-    for (let i = 0; i < 2; i++){
+
+    for(let i = 0; i < 2; i++) {
         let card = drawCard();
         discard.push(card);
         playerOne.hand.push(deck[card]);
         console.log(deck[card]);
     }
-    for (let i = 0; i < 2; i++){
+
+    for(let i = 0; i < 2; i++) {
         let card = drawCard();
         discard.push(card);
         dealer.hand.push(deck[card]);
         console.log(deck[card]);
     }
+
     document.getElementById("holeOne").src = playerOne.hand[0].svgRef;
     document.getElementById("holeTwo").src = playerOne.hand[1].svgRef;
+
     for(let x in playerOne.hand)
         console.log("player hand index: " + x + " = " + playerOne.hand[x].number + " " + playerOne.hand[x].suit);
     for(let x in dealer.hand)
@@ -60,184 +66,197 @@ export function gameStart(){
 }
 
 //draw the flop, three cards to the community, First
-export function flop(){
+export function flop() {
     console.log("Flop...")
-    for(let i = 0; i < 3; i++){
+    
+    for(let i = 0; i < 3; i++) {
         let card = drawCard();
         discard.push(card);
         community.push(deck[card]);
     }
+
     for(let x in community)
         console.log("community index: " + x + " = " + community[x].number + " " + community[x].suit);
 }
 
 //draw the turn or the river, one card to community, Second and Third
-export function oneCard(){
+export function oneCard() {
     console.log("Drawing one card...")
+
     let card = drawCard();
     discard.push(card);
     community.push(deck[card]);
+
     for(let x in community)
         console.log("community index: " + x + " = " + community[x].number + " " + community[x].suit);
 }
 
 //empty the arrays at the end of a round
-export function roundEnd(){
+export function roundEnd() {
     console.log("Ending round...")
     discard = [];
     playerOne.hand = [];
     dealer.hand = [];
     community = [];
     gameState = 0;
+    
     for(let x in playerOne.hand)
         console.log("player hand index: " + x + " = " + playerOne.hand[x].number + " " + playerOne.hand[x].suit);
     for(let x in dealer.hand)
         console.log("dealer hand index: " + x + " = " + dealer.hand[x].number + " " + dealer.hand[x].suit);
     for(let x in community)
         console.log("community index: " + x + " = " + community[x].number + " " + community[x].suit);
+    
     let cards = document.querySelectorAll(".card");
-    for(let x = 0; x < cards.length; x++){
+    for(let x = 0; x < cards.length; x++) {
         cards[x].querySelector("img").src = "./Cards/B1.svg";
     }
 }
 
-function reveal(){
+function reveal() {
     document.getElementById("dealerOne").src = dealer.hand[0].svgRef;
     document.getElementById("dealerTwo").src = dealer.hand[1].svgRef;
 }
 
-function endGame(){
+function endGame() {
     roundEnd();
     removeGame();
     createHomePage();
 }
 
-function compareHands(playerHand, dealerHand){
+function compareHands(playerHand, dealerHand) {
     let hands = ["high card", "one pair", "two pair", "three of a kind", "straight", "flush", "full house", "four of a kind", "straight flush", "royal flush"];
     let playerHandValue = hands.indexOf(playerHand.hand_value);
     let dealerHandValue = hands.indexOf(dealerHand.hand_value);
 
-    if(playerHandValue > dealerHandValue){
+    if(playerHandValue > dealerHandValue) {
         console.log("player wins");
         return "player wins with " + playerHand.hand_value;
     }
-    else if(dealerHandValue > playerHandValue){
+    else if(dealerHandValue > playerHandValue) {
         console.log("dealer wins");
         return "dealer wins with " + dealerHand.hand_value;
     }
-    else{
+    else {
         let playerHighCard = getRankValue(playerHand.highcard);
         let dealerHighCard = getRankValue(dealerHand.highcard);
 
-        if(playerHighCard > dealerHighCard){
+        if(playerHighCard > dealerHighCard) {
             console.log("player wins");
-            return "player wins with a high card of" +playerHand.highcard;
+            return "player wins with a high card of" + playerHand.highcard;
         }
-        else if (dealerHighCard > playerHighCard){
+        else if(dealerHighCard > playerHighCard) {
             console.log("dealer wins");
             return "dealer wins with a high card of" + dealerHand.highcard;
         }
         else {
-                if (playerHand.hand_value == "two pair" && dealerHand.hand_value == "two pair"){
-                    var result = decide_twopair_kicker(
-                        twopair_kicker(playerOne.hand, community),
-                        twopair_kicker(dealer.hand, community)
-                    );
-                    if (result[0] ==   "player 1 wins"){
-                        console.log("player wins")
-                        return "player wins with two pair kicker of " + result[1]
-                    }else if (result[0] == "player 2 wins"){
-                            console.log("dealer wins")
-                            return "dealer wins with two pair kicker of " + result[1]
-                    }else {  var kickerResult = kicker(
-                        getcardsforkicker(playerOne.hand, community),
-                        getcardsforkicker(dealer.hand, community)
-                    ) || ["tie", 0];  // Fallback if kicker returns undefined
-                    
-                    if (kickerResult[0] == "player 1 wins"){
-                        console.log("player wins")
-                        return "player wins with a kicker of " + kickerResult[1]
-                    }else if (kickerResult[0] == "player 2 wins"){
+            if(playerHand.hand_value == "two pair" && dealerHand.hand_value == "two pair") {
+                var result = decide_twopair_kicker(
+                    twopair_kicker(playerOne.hand, community),
+                    twopair_kicker(dealer.hand, community)
+                );
+
+                if(result[0] ==   "player 1 wins") {
+                    console.log("player wins")
+                    return "player wins with two pair kicker of " + result[1]
+                }
+                else if(result[0] == "player 2 wins") {
                         console.log("dealer wins")
-                        return "dealer wins with a kicker of " + kickerResult[1]
-                    }else {
-                        console.log("tie")
-                        return "tie"
-                    }
-                    }
-
-                } else if (playerHand.hand_value == "full house" && dealerHand.hand_value == "full house"){
-                        var playerfullHouseKicker = full_house_kicker(playerOne.hand, community);
-                        var dealerfullHouseKicker = full_house_kicker(dealer.hand, community);
-
-                        if (playerfullHouseKicker > dealerfullHouseKicker){
-                            console.log("player wins")
-                            return "player wins with a full house kicker of " + playerfullHouseKicker
-                        }
-                        else if (dealerfullHouseKicker > playerfullHouseKicker){
-                            console.log("dealer wins")
-                            return "dealer wins with a full house kicker of " + dealerfullHouseKicker
-                        }else {var kickerResult = kicker(
-                            getcardsforkicker(playerOne.hand, community),
-                            getcardsforkicker(dealer.hand, community)
-                        ) || ["tie", 0];  // Fallback if kicker returns undefined
-                        
-                        if (kickerResult[0] == "player 1 wins"){
-                            console.log("player wins")
-                            return "player wins with a kicker of " + kickerResult[1]
-                        }else if (kickerResult[0] == "player 2 wins"){
-                            console.log("dealer wins")
-                            return "dealer wins with a kicker of " + kickerResult[1]
-                        }else {
-                            console.log("tie")
-                            return "tie"
-                        }
-                    
-
-                        }
-
-
-                }else {
+                        return "dealer wins with two pair kicker of " + result[1]
+                }
+                else {
                     var kickerResult = kicker(
                         getcardsforkicker(playerOne.hand, community),
                         getcardsforkicker(dealer.hand, community)
                     ) || ["tie", 0];  // Fallback if kicker returns undefined
                     
-                    if (kickerResult[0] == "player 1 wins"){
+                    if(kickerResult[0] == "player 1 wins") {
                         console.log("player wins")
                         return "player wins with a kicker of " + kickerResult[1]
-                    }else if (kickerResult[0] == "player 2 wins"){
+                    } else if(kickerResult[0] == "player 2 wins") {
                         console.log("dealer wins")
                         return "dealer wins with a kicker of " + kickerResult[1]
-                    }else {
+                    } else {
                         console.log("tie")
                         return "tie"
                     }
                 }
             }
+            else if(playerHand.hand_value == "full house" && dealerHand.hand_value == "full house") {
+                var playerfullHouseKicker = full_house_kicker(playerOne.hand, community);
+                var dealerfullHouseKicker = full_house_kicker(dealer.hand, community);
+
+                if(playerfullHouseKicker > dealerfullHouseKicker) {
+                    console.log("player wins")
+                    return "player wins with a full house kicker of " + playerfullHouseKicker
+                }
+                else if(dealerfullHouseKicker > playerfullHouseKicker) {
+                    console.log("dealer wins")
+                    return "dealer wins with a full house kicker of " + dealerfullHouseKicker
+                }
+                else {
+                    var kickerResult = kicker(
+                        getcardsforkicker(playerOne.hand, community),
+                        getcardsforkicker(dealer.hand, community)
+                    ) || ["tie", 0];  // Fallback if kicker returns undefined
+                    
+                    if(kickerResult[0] == "player 1 wins") {
+                        console.log("player wins")
+                        return "player wins with a kicker of " + kickerResult[1]
+                    }
+                    else if(kickerResult[0] == "player 2 wins") {
+                        console.log("dealer wins")
+                        return "dealer wins with a kicker of " + kickerResult[1]
+                    }
+                    else {
+                        console.log("tie")
+                        return "tie"
+                    }
+                }
+            }
+            else {
+                var kickerResult = kicker(
+                    getcardsforkicker(playerOne.hand, community),
+                    getcardsforkicker(dealer.hand, community)
+                ) || ["tie", 0];  // Fallback if kicker returns undefined
+                
+                if(kickerResult[0] == "player 1 wins") {
+                    console.log("player wins")
+                    return "player wins with a kicker of " + kickerResult[1]
+                }
+                else if(kickerResult[0] == "player 2 wins") {
+                    console.log("dealer wins")
+                    return "dealer wins with a kicker of " + kickerResult[1]
+                }
+                else {
+                    console.log("tie")
+                    return "tie"
+                }
+            }
         }
+    }
 }
 
-export function gameIterate(){
+export function gameIterate() {
     console.log("Begin iteration...")
-    if(gameState == 0){
+    if(gameState == 0) {
         gameStart();
         gameState++;
     }
-    else if(gameState == 1){
+    else if(gameState == 1) {
         flop();
         document.getElementById("communityOne").src = community[0].svgRef;
         document.getElementById("communityTwo").src = community[1].svgRef;
         document.getElementById("communityThree").src = community[2].svgRef;
         gameState++;
     }
-    else if(gameState == 2 || gameState == 3){
+    else if(gameState == 2 || gameState == 3) {
         oneCard();
-        if(gameState == 2){document.getElementById("communityFour").src = community[3].svgRef;}
-        if(gameState == 3){document.getElementById("communityFive").src = community[4].svgRef;}
+        if(gameState == 2) { document.getElementById("communityFour").src = community[3].svgRef; }
+        if(gameState == 3) { document.getElementById("communityFive").src = community[4].svgRef; }
         gameState++;
     }
-    else if(gameState == 4){
+    else if(gameState == 4) {
         reveal();
         
         let playerHand = checkplayerhand(playerOne.hand, community);
@@ -246,7 +265,7 @@ export function gameIterate(){
         console.log(dealerHand.hand_value + " " + dealerHand.highcard);
 
         const buttons = document.getElementsByTagName("button");
-        for(const button of buttons){button.disabled = true;}
+        for(const button of buttons) {button.disabled = true;}
 
         createEndRoundContainer();
 
@@ -262,17 +281,17 @@ export function gameIterate(){
             gameStart();
             gameState++;
             const buttons = document.getElementsByTagName("button");
-            for(const button of buttons){button.disabled = false;}
+            for(const button of buttons) {button.disabled = false;}
         });
         document.getElementById("endGameButton").addEventListener("click", () => {
             console.log("endGame")
             removeEndRoundContainer();
             endGame();
             const buttons = document.getElementsByTagName("button");
-            for(const button of buttons){button.disabled = false;}
+            for(const button of buttons) { button.disabled = false; }
         });
     }
-    else if(gameState == 5){
+    else if(gameState == 5) {
         endGame;
     }
     console.log("End iteration...");

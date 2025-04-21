@@ -1,5 +1,5 @@
 //managing chips
-import { player } from "./players.js";
+import { Player } from "./players.js";
 //variables to hold number of chips
 let pot = 0;
 

@@ -1,4 +1,4 @@
-export class player {
+export class Player {
     constructor(name, chips, hand, bet = 0, isfolded = false, isdealer = false) {
         this.name = name;
         this.chips = chips;
