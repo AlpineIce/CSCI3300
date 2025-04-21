@@ -31,8 +31,8 @@ function drawCard() {
     let card = Math.floor(Math.random() * 52);
     console.log("drawing card...")
 
-    if(discard.includes(card)) {
-        card = drawCard();
+    while(discard.includes(card)) {
+        card++;
     }
 
     return card;
@@ -106,7 +106,7 @@ export function roundEnd() {
         console.log("dealer hand index: " + x + " = " + dealer.hand[x].number + " " + dealer.hand[x].suit);
     for(let x in community)
         console.log("community index: " + x + " = " + community[x].number + " " + community[x].suit);
-    
+
     let cards = document.querySelectorAll(".card");
     for(let x = 0; x < cards.length; x++) {
         cards[x].querySelector("img").src = "./Cards/B1.svg";
