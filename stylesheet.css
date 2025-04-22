@@ -162,3 +162,30 @@ body {
         font-size: 32px;
     }
 }
+
+#potContainer{
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    height: 20px;
+    width: 50px;
+    background-color: lightgray;
+}
+
+#playerChips{
+    position: fixed;
+    bottom: 5%;
+    right: 20%;
+    height: 20px;
+    width: 50px;
+    background-color: lightgray;
+}
+
+#dealerChips{
+    position: fixed;
+    bottom: 5%;
+    left: 5%;
+    height: 20px;
+    width: 50px;
+    background-color: lightgray;
+}

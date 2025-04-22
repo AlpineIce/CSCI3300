@@ -133,17 +133,14 @@ function createInteractionContainer() {
 
     const checkButton = createButton("Check", "check-button", (value) => {
         console.log("Player checks");
-        gameIterate();
     });
 
     const callButton = createButton("Call", "call-button", (value) => {
         console.log("Player calls");
-        gameIterate();
     });
 
     const foldButton = createButton("Fold", "fold-button", () => {
         console.log("Player folds");
-        gameIterate();
     });
 
     container.appendChild(checkButton);
@@ -153,11 +150,11 @@ function createInteractionContainer() {
     container.appendChild(createButtonSliderPair(50, 500, 
         //bet event
         (value) => {
-            console.log("Bet: " + value); gameIterate();
+            console.log("Bet: " + value); 
         },
         //raise event
         (value) => {
-            console.log("Raise: " + value); gameIterate();
+            console.log("Raise: " + value); 
         }
     ));
 }
@@ -227,6 +224,9 @@ export function removeGame(){
     document.getElementById("community-cards-container").remove();
     document.getElementById("hole-cards-container").remove();
     document.getElementById("dealer-cards-container").remove();
+    document.getElementById("potContainer").remove();
+    document.getElementById("playerChips").remove();
+    document.getElementById("dealerChips").remove();
 }
 
 export function createHomePage(){
@@ -241,10 +241,40 @@ export function createHomePage(){
     startButton.addEventListener("click", () => {startGame();})
     document.getElementById("start-button-container").appendChild(startButton);
 }
+
+export function createPot(){
+    const container = document.createElement("div");
+    container.id = "potContainer";
+    document.body.appendChild(container);
+    const potPrint = document.createElement("p");
+    potPrint.id = "potPrint";
+    document.getElementById("potContainer").appendChild(potPrint);
+}
+
+export function createPlayerChips(){
+    const container = document.createElement("div");
+    container.id = "playerChips";
+    document.body.appendChild(container);
+    const playerChips = document.createElement("p");
+    playerChips.id = "playerChipsPrint";
+    document.getElementById("playerChips").appendChild(playerChips);
+}
+
+export function createDealerChips(){
+    const container = document.createElement("div");
+    container.id = "dealerChips"
+    document.body.appendChild(container);
+    const dealerChips = document.createElement("p");
+    dealerChips.id = "dealerChipsPrint";
+    document.getElementById("dealerChips").appendChild(dealerChips);
+}
 export function initializeGui() {
     createPokerHandTable();
     createInteractionContainer();
     createCommunityCardsContainer();
     createHoleCardsContainer();
     createDealerCardsContainer();
+    createPot();
+    createPlayerChips();
+    createDealerChips();
 }

@@ -7,6 +7,8 @@ import { removeEndRoundContainer } from "./gui.js";
 import { removeGame } from "./gui.js";
 import { createHomePage } from "./gui.js";
 import { getRankValue } from "./hand_check.js";
+import "./chips.js";
+import { betChips, getAnte, getCurr, setCurrentBet, tieGame, updateChips, winPot } from "./chips.js";
 //initiallize the deck as an array of objects representing each card
 const deck = [ {suit : 'heart', number : '2', svgRef : './Cards/H2.svg'}, {suit : 'heart', number : '3', svgRef : './Cards/H3.svg'}, {suit : 'heart', number : '4', svgRef : './Cards/H4.svg'}, {suit : 'heart', number : '5', svgRef : './Cards/H5.svg'}, {suit : 'heart', number : '6', svgRef : './Cards/H6.svg'}, {suit : 'heart', number : '7', svgRef : './Cards/H7.svg'}, {suit : 'heart', number : '8', svgRef : './Cards/H8.svg'}, {suit : 'heart', number : '9', svgRef : './Cards/H9.svg'}, {suit : 'heart', number : '10', svgRef : './Cards/H10.svg'}, {suit : 'heart', number : 'jack', svgRef : './Cards/HJ.svg'}, {suit : 'heart', number : 'queen', svgRef : './Cards/HQ.svg'}, {suit : 'heart', number : 'king', svgRef : './Cards/HK.svg'}, {suit : 'heart', number : 'ace', svgRef : './Cards/HA.svg'},
     {suit : 'spade', number : '2', svgRef : './Cards/S2.svg'}, {suit : 'spade', number : '3', svgRef : './Cards/S3.svg'}, {suit : 'spade', number : '4', svgRef : './Cards/S4.svg'}, {suit : 'spade', number : '5', svgRef : './Cards/S5.svg'}, {suit : 'spade', number : '6', svgRef : './Cards/S6.svg'}, {suit : 'spade', number : '7', svgRef : './Cards/S7.svg'}, {suit : 'spade', number : '8', svgRef : './Cards/S8.svg'}, {suit : 'spade', number : '9', svgRef : './Cards/S9.svg'}, {suit : 'spade', number : '10', svgRef : './Cards/S10.svg'}, {suit : 'spade', number : 'jack', svgRef : './Cards/SJ.svg'}, {suit : 'spade', number : 'queen', svgRef : './Cards/SQ.svg'}, {suit : 'spade', number : 'king', svgRef : './Cards/SK.svg'}, {suit : 'spade', number : 'ace', svgRef : './Cards/SA.svg'},
@@ -19,12 +21,12 @@ let discard = [];
 let playerOne = new Player;
 playerOne.hand = []
 playerOne.chips = 1000;
-let dealer = new Player;
+export let dealer = new Player;
 dealer.hand = [];
 dealer.chips = 10000;
 let community = [];
-let gameState = 0;
-let end;
+ let gameState = 0;
+let start = true;
 
 //create a random number between 0 and 51 to draw a card, regenerate if card is in the discard
 function drawCard() {
@@ -40,7 +42,12 @@ function drawCard() {
 
 //draw two cards to the player and dealer hand
 export function gameStart() {
-    console.log("Starting game...")
+    console.log("Starting game...");
+
+    if(start){buttonFunctions();start = false;}
+
+    updateChips(playerOne, "playerChipsPrint");
+    updateChips(dealer, "dealerChipsPrint");
 
     for(let i = 0; i < 2; i++) {
         let card = drawCard();
@@ -99,6 +106,7 @@ export function roundEnd() {
     dealer.hand = [];
     community = [];
     gameState = 0;
+    setSlider();
     
     for(let x in playerOne.hand)
         console.log("player hand index: " + x + " = " + playerOne.hand[x].number + " " + playerOne.hand[x].suit);
@@ -118,7 +126,10 @@ function reveal() {
     document.getElementById("dealerTwo").src = dealer.hand[1].svgRef;
 }
 
-function endGame() {
+export function endGame() {
+    playerOne.chips = 1000;
+    dealer.chips = 10000;
+    start = true;
     roundEnd();
     removeGame();
     createHomePage();
@@ -131,10 +142,12 @@ function compareHands(playerHand, dealerHand) {
 
     if(playerHandValue > dealerHandValue) {
         console.log("player wins");
+        winPot(playerOne);
         return "player wins with " + playerHand.hand_value;
     }
     else if(dealerHandValue > playerHandValue) {
         console.log("dealer wins");
+        winPot(dealer);
         return "dealer wins with " + dealerHand.hand_value;
     }
     else {
@@ -143,10 +156,12 @@ function compareHands(playerHand, dealerHand) {
 
         if(playerHighCard > dealerHighCard) {
             console.log("player wins");
+            winPot(playerOne);
             return "player wins with a high card of" + playerHand.highcard;
         }
         else if(dealerHighCard > playerHighCard) {
             console.log("dealer wins");
+            winPot(dealer);
             return "dealer wins with a high card of" + dealerHand.highcard;
         }
         else {
@@ -158,10 +173,12 @@ function compareHands(playerHand, dealerHand) {
 
                 if(result[0] ==   "player 1 wins") {
                     console.log("player wins")
+                    winPot(playerOne);
                     return "player wins with two pair kicker of " + result[1]
                 }
                 else if(result[0] == "player 2 wins") {
                         console.log("dealer wins")
+                        winPot(dealer);
                         return "dealer wins with two pair kicker of " + result[1]
                 }
                 else {
@@ -172,12 +189,15 @@ function compareHands(playerHand, dealerHand) {
                     
                     if(kickerResult[0] == "player 1 wins") {
                         console.log("player wins")
+                        winPot(playerOne);
                         return "player wins with a kicker of " + kickerResult[1]
                     } else if(kickerResult[0] == "player 2 wins") {
                         console.log("dealer wins")
+                        winPot(dealer);
                         return "dealer wins with a kicker of " + kickerResult[1]
                     } else {
                         console.log("tie")
+                        tieGame(playerOne, dealer);
                         return "tie"
                     }
                 }
@@ -188,10 +208,12 @@ function compareHands(playerHand, dealerHand) {
 
                 if(playerfullHouseKicker > dealerfullHouseKicker) {
                     console.log("player wins")
+                    winPot(playerOne);
                     return "player wins with a full house kicker of " + playerfullHouseKicker
                 }
                 else if(dealerfullHouseKicker > playerfullHouseKicker) {
                     console.log("dealer wins")
+                    winPot(dealer);
                     return "dealer wins with a full house kicker of " + dealerfullHouseKicker
                 }
                 else {
@@ -202,14 +224,17 @@ function compareHands(playerHand, dealerHand) {
                     
                     if(kickerResult[0] == "player 1 wins") {
                         console.log("player wins")
+                        winPot(playerOne);
                         return "player wins with a kicker of " + kickerResult[1]
                     }
                     else if(kickerResult[0] == "player 2 wins") {
                         console.log("dealer wins")
+                        winPot(dealer);
                         return "dealer wins with a kicker of " + kickerResult[1]
                     }
                     else {
                         console.log("tie")
+                        tieGame(playerOne, dealer);
                         return "tie"
                     }
                 }
@@ -222,14 +247,17 @@ function compareHands(playerHand, dealerHand) {
                 
                 if(kickerResult[0] == "player 1 wins") {
                     console.log("player wins")
+                    winPot(playerOne);
                     return "player wins with a kicker of " + kickerResult[1]
                 }
                 else if(kickerResult[0] == "player 2 wins") {
                     console.log("dealer wins")
+                    winPot(dealer);
                     return "dealer wins with a kicker of " + kickerResult[1]
                 }
                 else {
                     console.log("tie")
+                    tieGame(playerOne, dealer);
                     return "tie"
                 }
             }
@@ -237,8 +265,103 @@ function compareHands(playerHand, dealerHand) {
     }
 }
 
+function buttonFunctions(){
+    let checkButton = document.getElementById("check-button");
+    checkButton.addEventListener("click", () => {
+        console.log("check " + getAnte());
+        betChips(playerOne, getAnte());
+        betChips(dealer, getAnte());
+        updateChips(playerOne, "playerChipsPrint");
+        updateChips(dealer, "dealerChipsPrint");
+        gameIterate();
+    });
+
+    let callbutton = document.getElementById("call-button");
+    callbutton.addEventListener("click", () =>{
+        console.log("call " + getCurr());
+        betChips(playerOne, getCurr());
+        betChips(dealer, getCurr());
+        updateChips(playerOne, "playerChipsPrint");
+        updateChips(dealer, "dealerChipsPrint");
+        gameIterate();
+    });
+
+    let foldButton = document.getElementById("fold-button");
+    foldButton.addEventListener("click", () =>{
+        console.log("fold");
+
+        winPot(dealer);
+        updateChips(dealer, "dealerChipsPrint");
+
+        reveal();
+
+        const buttons = document.getElementsByTagName("button");
+        for(const button of buttons) {button.disabled = true;}
+
+        createEndRoundContainer();
+
+        const results = document.createElement("p");
+        results.id = "resultText";
+        results.innerText = "player Folds"
+        document.getElementById("endRoundContainer").appendChild(results);
+
+        document.getElementById("newRoundButton").addEventListener("click", () =>{
+            console.log("newround");
+            removeEndRoundContainer();
+            roundEnd();
+            gameStart();
+            gameState++;
+            const buttons = document.getElementsByTagName("button");
+            for(const button of buttons) {button.disabled = false;}
+        });
+    
+        document.getElementById("endGameButton").addEventListener("click", () => {
+            console.log("endGame")
+            removeEndRoundContainer();
+            endGame();
+            const buttons = document.getElementsByTagName("button");
+            for(const button of buttons) { button.disabled = false; }
+        });
+    });
+
+    document.getElementById("bet-button").addEventListener("click", () =>{
+        console.log(document.getElementById("bet-raise-slider").value);
+        let bet = document.getElementById("bet-raise-slider").value;
+        console.log(bet);
+        setCurrentBet(bet);
+        betChips(playerOne, getCurr());
+        betChips(dealer, getCurr());
+        updateChips(playerOne, "playerChipsPrint");
+        updateChips(dealer, "dealerChipsPrint");
+        gameIterate();
+    });
+
+    document.getElementById("raise-button").addEventListener("click", () =>{
+        console.log(document.getElementById("bet-raise-slider").value);
+        let bet = document.getElementById("bet-raise-slider").value;
+        console.log(bet);
+        setCurrentBet(bet);
+        betChips(playerOne, getCurr());
+        betChips(dealer, getCurr());
+        updateChips(playerOne, "playerChipsPrint");
+        updateChips(dealer, "dealerChipsPrint");
+        gameIterate();
+    });
+}
+
+function setSlider(){
+    let curr = getCurr();
+    let ante = getAnte();
+    const slider = document.getElementById("bet-raise-slider");
+    slider.max = playerOne.chips;
+    slider.min = curr;
+}
+
 export function gameIterate() {
     console.log("Begin iteration...")
+    let ante = getAnte();
+    setSlider();
+
     if(gameState == 0) {
         gameStart();
         gameState++;
@@ -294,5 +417,7 @@ export function gameIterate() {
     else if(gameState == 5) {
         endGame;
     }
+
+    setCurrentBet(ante);
     console.log("End iteration...");
 }
