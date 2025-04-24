@@ -6,6 +6,13 @@ export function startGame() {
     //remove start button
     document.getElementById("start-button-container").remove();
 
+    //Hide the poker rules section
+    const pokerRules = document.getElementById("poker-rules");
+    if (pokerRules) {
+        pokerRules.style.display = "none";
+        
+    }
+
     //initialize GUI
     initializeGui();
 
