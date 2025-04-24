@@ -17,6 +17,7 @@ function createPokerHandTable() {
     handTableContainer.style.backgroundColor = "black";
     handTableContainer.style.color = "white";
     handTableContainer.style.padding = "1em";
+    handTableContainer.style.border = "black"
     handTableContainer.style.borderRadius = "10px";
     handTableContainer.style.maxWidth = "300px";
     handTableContainer.style.margin = "2em auto";
@@ -94,7 +95,7 @@ function createInteractionContainer() {
         slider.max = max;
         slider.value = startingValue;
         slider.style.backgroundColor = "black";
-        slider.style.border = "1px solid white";
+        slider.style.border = "1px solid black";
         slider.style.color = "white;"
 
         slider.addEventListener("input", () => {
@@ -114,7 +115,7 @@ function createInteractionContainer() {
         button.innerText = label;
         button.style.backgroundColor = "black";
         button.style.color = "white";
-        button.style.border = "2px solid white";
+        button.style.border = "2px solid black";
         button.style.padding = "0.5em 1em";
         button.style.margin = "0.5em";
         button.style.borderRadius = "5px";
