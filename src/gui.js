@@ -85,6 +85,7 @@ function createInteractionContainer() {
         const startingValue = min;
         const label = document.createElement("label");
         label.innerText = `Amount: ${startingValue}`;
+        label.style.color = "white";
 
         const slider = document.createElement("input");
         slider.id = "bet-raise-slider";
@@ -92,6 +93,9 @@ function createInteractionContainer() {
         slider.min = min;
         slider.max = max;
         slider.value = startingValue;
+        slider.style.backgroundColor = "black";
+        slider.style.border = "1px solid white";
+        slider.style.color = "white;"
 
         slider.addEventListener("input", () => {
             label.innerText = `Amount: ${slider.value}`;
@@ -108,6 +112,12 @@ function createInteractionContainer() {
         const button = document.createElement("button");
         button.id = id;
         button.innerText = label;
+        button.style.backgroundColor = "black";
+        button.style.color = "white";
+        button.style.border = "2px solid white";
+        button.style.padding = "0.5em 1em";
+        button.style.margin = "0.5em";
+        button.style.borderRadius = "5px";
         button.addEventListener("click", () => {
             const value = document.getElementById("bet-raise-slider").value;
             onClick(value);
@@ -238,6 +248,12 @@ export function createHomePage(){
     startButton.type = "button";
     startButton.id = "start-button";
     startButton.innerText = "Start Game";
+    startButton.style.backgroundColor = "black";
+    startButton.style.color = "white";
+    startButton.style.border = "2px solid white";
+    startButton.style.padding = "0.5em 1em";
+    startButton.style.margin = "1em";
+    startButton.style.borderRadius = "5px";
     startButton.addEventListener("click", () => {startGame();})
     document.getElementById("start-button-container").appendChild(startButton);
 }
@@ -248,6 +264,8 @@ export function createPot(){
     document.body.appendChild(container);
     const potPrint = document.createElement("p");
     potPrint.id = "potPrint";
+    potPrint.style.color = "white";
+    potPrint.style.backgroundColor = "black";
     document.getElementById("potContainer").appendChild(potPrint);
 }
 
@@ -257,6 +275,8 @@ export function createPlayerChips(){
     document.body.appendChild(container);
     const playerChips = document.createElement("p");
     playerChips.id = "playerChipsPrint";
+    playerChips.style.color = "white";
+    playerChips.style.backgroundColor = "black";
     document.getElementById("playerChips").appendChild(playerChips);
 }
 
@@ -266,6 +286,8 @@ export function createDealerChips(){
     document.body.appendChild(container);
     const dealerChips = document.createElement("p");
     dealerChips.id = "dealerChipsPrint";
+    dealerChips.style.color = "white";
+    dealerChips.style.backgroundColor = "black";
     document.getElementById("dealerChips").appendChild(dealerChips);
 }
 export function initializeGui() {
