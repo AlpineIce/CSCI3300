@@ -1,17 +1,26 @@
+:root {
+    --container-color: rgb(50, 50, 50);
+    --container-radius: 12px;
+    --container-padding: 25px;
+}  
+
 body {
-    color: rgb(0, 0, 0);
-    background-color: #1a0000;
-    margin: 0px;
-    padding: 0px;
-    font-family: sans-serif;
+    color: rgb(255, 255, 255);
+    background-color: #3a0000;
+    font-family: Arial, Helvetica, sans-serif;
 
     h1 {
         font-size: 3rem;
-        color: #ffffff;
         margin-top: 2rem;
         margin-bottom: 2rem;
         text-align: center;
     }
+}
+
+.container {
+    background-color: var(--container-color);
+    padding: var(--container-padding);
+    border-radius: var(--container-radius);
 }
 
 #start-button-container {    
@@ -22,7 +31,6 @@ body {
 
     button {
         border: 0px;
-        border-radius: 10px;
         font-size: 40px;
         padding: 80px 200px;
     }
@@ -35,9 +43,6 @@ body {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 4;
 
     button {
@@ -52,13 +57,11 @@ body {
     color: white;
     font-size: 1.5rem;
     padding: 0.75em 1.5em;
-    border: none;
-    border-radius: 10px;
+    border-radius: var(--container-radius);
     cursor: pointer;
     box-shadow: 0 0 15px #ff1a1a;
     animation: pulse 2s infinite;
     transition: transform 0.3s, bos-shadow 0.3s;
-
 }
 
 #start-button:hover {
@@ -72,14 +75,19 @@ body {
     100% {box-shadow: 0 0 10px #ff1a1a; }
 }
 
+.card {
+    margin: 10px;
+
+    img {
+        width: 150px;
+    }
+}
+
 .card-container {
     position: fixed;
     display: flex;
     justify-content: center;
     flex-direction: row;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 #community-cards-container {
@@ -117,15 +125,6 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-
-    button {
-        flex: 1;
-        width: 100%;
-    }
-}
-
-.card {
-    margin: 10px;
 }
 
 #poker-hand-table {
@@ -133,11 +132,8 @@ body {
     left: 10px;
     top: 10px;
     width: 160px;
-    padding: 10px;
-    background: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
+    padding: var(--container-padding);
+    border-radius: var(--container-radius);
     font-size: 14px;
     z-index: 0;
 
@@ -159,18 +155,12 @@ body {
 
 #tooltip {
     position: absolute;
-    background-color: #222;
-    color: #fff;
     padding: 6px 10px;
-    border-radius: 4px;
+    border-radius: var(--container-radius);
     font-size: 12px;
     pointer-events: none;
     z-index: 1000;
     white-space: nowrap;
-}
-
-.card img {
-    width: 150px;
 }
 
 #endRoundContainer{
@@ -182,42 +172,42 @@ body {
     flex-direction: column;
     justify-content: center;
     width: 500px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 1.0);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+
+    p {
+        font-size: 24px;
+        text-align: center;
+    }
 
     button {
         margin: 5px;
         padding: 10px 20px;
-        font-size: 32px;
+        font-size: 24px;
     }
+}
+
+.chip-container {
+    position: fixed;
+    background-color: var(--container-color);
+    border-radius: var(--container-radius);
+    transform: translateX(-50%);
+    padding: 0px 10px;
 }
 
 #potContainer{
     position: fixed;
     top: 10%;
     left: 50%;
-    height: 20px;
-    width: 50px;
-    background-color: lightgray;
 }
 
 #playerChips{
     position: fixed;
     bottom: 5%;
     right: 20%;
-    height: 20px;
-    width: 50px;
-    background-color: lightgray;
 }
 
 #dealerChips{
     position: fixed;
     bottom: 5%;
     left: 5%;
-    height: 20px;
-    width: 50px;
-    background-color: lightgray;
 }

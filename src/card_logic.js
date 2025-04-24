@@ -296,14 +296,9 @@ function buttonFunctions(){
         reveal();
 
         const buttons = document.getElementsByTagName("button");
-        for(const button of buttons) {button.disabled = true;}
+        for(const button of buttons) { button.disabled = true; }
 
-        createEndRoundContainer();
-
-        const results = document.createElement("p");
-        results.id = "resultText";
-        results.innerText = "player Folds"
-        document.getElementById("endRoundContainer").appendChild(results);
+        createEndRoundContainer("player Folds");
 
         document.getElementById("newRoundButton").addEventListener("click", () =>{
             console.log("newround");
@@ -390,12 +385,7 @@ export function gameIterate() {
         const buttons = document.getElementsByTagName("button");
         for(const button of buttons) {button.disabled = true;}
 
-        createEndRoundContainer();
-
-        let results = document.createElement("p");
-        results.id = "resultText";
-        results.innerText = compareHands(playerHand, dealerHand);
-        document.getElementById("endRoundContainer").appendChild(results);
+        createEndRoundContainer(compareHands(playerHand, dealerHand));
 
         document.getElementById("newRoundButton").addEventListener("click", () => {
             console.log("newround")

@@ -14,14 +14,7 @@ function getNewCardSprite(elemId) {
 function createPokerHandTable() {
     const handTableContainer = document.createElement("div");
     handTableContainer.id = "poker-hand-table";
-    handTableContainer.style.backgroundColor = "black";
-    handTableContainer.style.color = "white";
-    handTableContainer.style.padding = "1em";
-    handTableContainer.style.border = "black"
-    handTableContainer.style.borderRadius = "10px";
-    handTableContainer.style.maxWidth = "300px";
-    handTableContainer.style.margin = "2em auto";
-    handTableContainer.style.fontFamily = "Arial, sans-serif";
+    handTableContainer.classList.add("container");
 
     const title = document.createElement("h3");
     title.innerText = "Poker Hands";
@@ -80,13 +73,13 @@ function createPokerHandTable() {
 function createInteractionContainer() {
     const container = document.createElement("div");
     container.id = "button-container";
+    container.classList.add("container");
     document.body.appendChild(container);
 
     function createSliderContainer(min, max) {
         const startingValue = min;
         const label = document.createElement("label");
         label.innerText = `Amount: ${startingValue}`;
-        label.style.color = "white";
 
         const slider = document.createElement("input");
         slider.id = "bet-raise-slider";
@@ -94,9 +87,6 @@ function createInteractionContainer() {
         slider.min = min;
         slider.max = max;
         slider.value = startingValue;
-        slider.style.backgroundColor = "black";
-        slider.style.border = "1px solid black";
-        slider.style.color = "white;"
 
         slider.addEventListener("input", () => {
             label.innerText = `Amount: ${slider.value}`;
@@ -113,12 +103,7 @@ function createInteractionContainer() {
         const button = document.createElement("button");
         button.id = id;
         button.innerText = label;
-        button.style.backgroundColor = "black";
-        button.style.color = "white";
-        button.style.border = "2px solid black";
-        button.style.padding = "0.5em 1em";
-        button.style.margin = "0.5em";
-        button.style.borderRadius = "5px";
+
         button.addEventListener("click", () => {
             const value = document.getElementById("bet-raise-slider").value;
             onClick(value);
@@ -173,7 +158,7 @@ function createInteractionContainer() {
 function createCommunityCardsContainer() {
     const container = document.createElement("div");
     container.id = "community-cards-container"
-    container.classList.add("card-container");
+    container.classList.add("card-container", "container");
     document.body.appendChild(container);
 
     container.appendChild(getNewCardSprite("communityOne"));
@@ -181,13 +166,12 @@ function createCommunityCardsContainer() {
     container.appendChild(getNewCardSprite("communityThree"));
     container.appendChild(getNewCardSprite("communityFour"));
     container.appendChild(getNewCardSprite("communityFive"));
-    
 }
 
 function createHoleCardsContainer() {
     const container = document.createElement("div");
     container.id = "hole-cards-container"
-    container.classList.add("card-container");
+    container.classList.add("card-container", "container");
     document.body.appendChild(container);
 
     container.appendChild(getNewCardSprite("holeOne"));
@@ -197,31 +181,34 @@ function createHoleCardsContainer() {
 function createDealerCardsContainer() {
     const container = document.createElement("div");
     container.id = "dealer-cards-container";
-    container.classList.add("card-container");
+    container.classList.add("card-container", "container");
     document.body.appendChild(container);
 
     container.appendChild(getNewCardSprite("dealerOne"));
     container.appendChild(getNewCardSprite("dealerTwo"));
 }
 
-export function createEndRoundContainer(){
+export function createEndRoundContainer(text){
     const container = document.createElement("div");
     container.id = "endRoundContainer"
-    document.body.appendChild(container);
-    
+    container.classList.add("container");
+
+    const resultText = document.createElement("p");
+    resultText.innerText = text;
+
     const newRound = document.createElement("button");
     newRound.id = "newRoundButton"
-    document.getElementById("endRoundContainer").appendChild(newRound);
-    let text = document.createElement("p");
-    text.innerText = "New Round";
-    document.getElementById("newRoundButton").appendChild(text);
+    newRound.innerText = "New Round";
 
     const endGame = document.createElement("button");
     endGame.id = "endGameButton";
-    document.getElementById("endRoundContainer").appendChild(endGame);
-    text = document.createElement("p");
-    text.innerText = "End Game";
-    document.getElementById("endGameButton").appendChild(text);
+    endGame.innerText = "End Game";
+
+    container.appendChild(resultText);
+    container.appendChild(newRound);
+    container.appendChild(endGame);
+
+    document.body.appendChild(container);
 }
 
 export function removeEndRoundContainer(){
@@ -243,61 +230,39 @@ export function removeGame(){
 export function createHomePage(){
     const startButtonContainer = document.createElement("div");
     startButtonContainer.id = "start-button-container";
+    startButtonContainer.classList.add("container");
+
     document.body.appendChild(startButtonContainer);
 
     const startButton = document.createElement("button");
     startButton.type = "button";
     startButton.id = "start-button";
     startButton.innerText = "Start Game";
-    startButton.style.backgroundColor = "black";
-    startButton.style.color = "white";
-    startButton.style.border = "2px solid white";
-    startButton.style.padding = "0.5em 1em";
-    startButton.style.margin = "1em";
-    startButton.style.borderRadius = "5px";
-    startButton.addEventListener("click", () => {startGame();})
+    startButton.addEventListener("click", () => {
+        startGame();
+    });
+    
     document.getElementById("start-button-container").appendChild(startButton);
 }
 
-export function createPot(){
+function createChips(containerID, chipsID) {
     const container = document.createElement("div");
-    container.id = "potContainer";
+    container.id = containerID;
+    container.classList.add("chip-container");
     document.body.appendChild(container);
-    const potPrint = document.createElement("p");
-    potPrint.id = "potPrint";
-    potPrint.style.color = "white";
-    potPrint.style.backgroundColor = "black";
-    document.getElementById("potContainer").appendChild(potPrint);
+
+    const text = document.createElement("p");
+    text.id = chipsID;
+    container.appendChild(text);
 }
 
-export function createPlayerChips(){
-    const container = document.createElement("div");
-    container.id = "playerChips";
-    document.body.appendChild(container);
-    const playerChips = document.createElement("p");
-    playerChips.id = "playerChipsPrint";
-    playerChips.style.color = "white";
-    playerChips.style.backgroundColor = "black";
-    document.getElementById("playerChips").appendChild(playerChips);
-}
-
-export function createDealerChips(){
-    const container = document.createElement("div");
-    container.id = "dealerChips"
-    document.body.appendChild(container);
-    const dealerChips = document.createElement("p");
-    dealerChips.id = "dealerChipsPrint";
-    dealerChips.style.color = "white";
-    dealerChips.style.backgroundColor = "black";
-    document.getElementById("dealerChips").appendChild(dealerChips);
-}
 export function initializeGui() {
     createPokerHandTable();
     createInteractionContainer();
     createCommunityCardsContainer();
     createHoleCardsContainer();
     createDealerCardsContainer();
-    createPot();
-    createPlayerChips();
-    createDealerChips();
+    createChips("potContainer", "potPrint");
+    createChips("playerChips", "playerChipsPrint");
+    createChips("dealerChips", "dealerChipsPrint");
 }
