@@ -91,7 +91,7 @@ body {
     justify-content: center;
     flex-direction: row;
 }
-
+/*adds positioning and styling for the community cards*/
 #community-cards-container {
     top: 200px;
     left: 50%;
@@ -119,7 +119,7 @@ body {
         width: 120px;
     }
 }
-
+/*adds positioning and styling for the dealers chips*/
 #dealerChips {
     position: fixed;
     bottom: 192px;
@@ -177,7 +177,7 @@ body {
         cursor: pointer;
     }
 }
-
+/*makes sure that the chips for the dealer are displayed over the dealers cards to make them visible*/
 #tooltip {
     position: absolute;
     padding: 6px 10px;
