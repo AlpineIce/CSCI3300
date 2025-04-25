@@ -3,7 +3,7 @@
     --container-radius: 12px;
     --container-padding: 25px;
 }  
-
+/*adds styling for the overall background of the program along with the font*/
 body {
     color: rgb(255, 255, 255);
     background-color: #3a0000;
@@ -23,7 +23,7 @@ body {
     padding: var(--container-padding);
     border-radius: var(--container-radius);
 }
-
+/*adds styling for the actual button*/
 #start-button-container {    
     display: flex;
     justify-content: center;
@@ -36,7 +36,7 @@ body {
         padding: 80px 200px;
     }
 }
-
+/*adjusts the position of the start button*/
 #button-container {
     position: fixed;
     bottom: 40px;
@@ -52,7 +52,7 @@ body {
         font-size: 16px;
     }
 }
-
+/*adds the animation for the start button*/
 #start-button {
     background: linear-gradient(135deg, #ff1a1a, #990000);
     color: white;
@@ -236,7 +236,7 @@ body {
     bottom: 5%;
     left: 5%;
 }
-
+/*Adds Styling for the Poker Rules containter */
 #poker-rules {
     background-color: var(--container-color);
     color: white;
