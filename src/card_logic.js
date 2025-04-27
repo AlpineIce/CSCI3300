@@ -9,6 +9,7 @@ import { createHomePage } from "./gui.js";
 import { getRankValue } from "./hand_check.js";
 import "./chips.js";
 import { betChips, getAnte, getCurr, setCurrentBet, tieGame, updateChips, winPot } from "./chips.js";
+import { findProbabilty } from "./probabity.js";
 //initiallize the deck as an array of objects representing each card
 const deck = [ {suit : 'heart', number : '2', svgRef : './Cards/H2.svg'}, {suit : 'heart', number : '3', svgRef : './Cards/H3.svg'}, {suit : 'heart', number : '4', svgRef : './Cards/H4.svg'}, {suit : 'heart', number : '5', svgRef : './Cards/H5.svg'}, {suit : 'heart', number : '6', svgRef : './Cards/H6.svg'}, {suit : 'heart', number : '7', svgRef : './Cards/H7.svg'}, {suit : 'heart', number : '8', svgRef : './Cards/H8.svg'}, {suit : 'heart', number : '9', svgRef : './Cards/H9.svg'}, {suit : 'heart', number : '10', svgRef : './Cards/H10.svg'}, {suit : 'heart', number : 'jack', svgRef : './Cards/HJ.svg'}, {suit : 'heart', number : 'queen', svgRef : './Cards/HQ.svg'}, {suit : 'heart', number : 'king', svgRef : './Cards/HK.svg'}, {suit : 'heart', number : 'ace', svgRef : './Cards/HA.svg'},
     {suit : 'spade', number : '2', svgRef : './Cards/S2.svg'}, {suit : 'spade', number : '3', svgRef : './Cards/S3.svg'}, {suit : 'spade', number : '4', svgRef : './Cards/S4.svg'}, {suit : 'spade', number : '5', svgRef : './Cards/S5.svg'}, {suit : 'spade', number : '6', svgRef : './Cards/S6.svg'}, {suit : 'spade', number : '7', svgRef : './Cards/S7.svg'}, {suit : 'spade', number : '8', svgRef : './Cards/S8.svg'}, {suit : 'spade', number : '9', svgRef : './Cards/S9.svg'}, {suit : 'spade', number : '10', svgRef : './Cards/S10.svg'}, {suit : 'spade', number : 'jack', svgRef : './Cards/SJ.svg'}, {suit : 'spade', number : 'queen', svgRef : './Cards/SQ.svg'}, {suit : 'spade', number : 'king', svgRef : './Cards/SK.svg'}, {suit : 'spade', number : 'ace', svgRef : './Cards/SA.svg'},
@@ -305,6 +306,7 @@ function buttonFunctions(){
             removeEndRoundContainer();
             roundEnd();
             gameStart();
+            playerPercents();
             gameState++;
             const buttons = document.getElementsByTagName("button");
             for(const button of buttons) {button.disabled = false;}
@@ -346,10 +348,27 @@ function buttonFunctions(){
 
 function setSlider(){
     let curr = getCurr();
-    let ante = getAnte();
     const slider = document.getElementById("bet-raise-slider");
     slider.max = playerOne.chips;
     slider.min = curr;
+}
+
+function playerPercents(){
+    let percents = findProbabilty(playerOne.hand, community);
+    let text = '';
+    for(let x in percents){
+        if(percents[x] != '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'){text = " " + percents[x] + "%";}
+        else{text = " " + percents[x];}
+        if(x == 0){document.getElementById("tableOnePair").innerText = text;}
+        if(x == 1){document.getElementById("tableTwoPair").innerText = text;}
+        if(x == 2){document.getElementById("tableThreeofaKind").innerText = text;}
+        if(x == 3){document.getElementById("tableStraight").innerText = text;}
+        if(x == 4){document.getElementById("tableFlush").innerText = text;}
+        if(x == 5){document.getElementById("tableFullHouse").innerText = text;}
+        if(x == 6){document.getElementById("tableFourofaKind").innerText = text;}
+        if(x == 7){document.getElementById("tableStraightFlush").innerText = text;}
+        if(x == 8){document.getElementById("tableRoyalFlush").innerText = text;}
+    }
 }
 
 export function gameIterate() {
@@ -359,6 +378,7 @@ export function gameIterate() {
 
     if(gameState == 0) {
         gameStart();
+        playerPercents();
         gameState++;
     }
     else if(gameState == 1) {
@@ -366,12 +386,14 @@ export function gameIterate() {
         document.getElementById("communityOne").src = community[0].svgRef;
         document.getElementById("communityTwo").src = community[1].svgRef;
         document.getElementById("communityThree").src = community[2].svgRef;
+        playerPercents();
         gameState++;
     }
     else if(gameState == 2 || gameState == 3) {
         oneCard();
         if(gameState == 2) { document.getElementById("communityFour").src = community[3].svgRef; }
         if(gameState == 3) { document.getElementById("communityFive").src = community[4].svgRef; }
+        playerPercents();
         gameState++;
     }
     else if(gameState == 4) {

@@ -39,6 +39,9 @@ function createPokerHandTable() {
         li.innerText = hand.name;
         li.classList.add("tooltip-target");
         li.dataset.tooltip = hand.description;
+        const scan = document.createElement("scan");
+        scan.id = "table" + (hand.name).replace(/\s/g, '');
+        li.appendChild(scan);
         ul.appendChild(li);
     });
 
