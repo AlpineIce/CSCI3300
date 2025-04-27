@@ -6,7 +6,12 @@ Jack of All Trades is a poker simulator that can be used to learn how to play po
 ![Example Image](res/readmeImage.png)
 
 ## Features
-* 
+* Check, call, fold, bet and raise
+* Automatic game progression and results calcualtion
+* Simulated chips to bet on
+* probability of outcome calculations
+* Tooltips for describing different hands
+* Beginner friendly interface
 
 ## Dependencies
 * Your favorite web browser
