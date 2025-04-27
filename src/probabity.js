@@ -1,5 +1,8 @@
+//initialize arrays to be used in comparisons
 const order = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace'];
-const suitOrder =['heart', 'spade', 'diamond', 'club']
+const suitOrder = ['heart', 'spade', 'diamond', 'club']
+
+//find the probability of getting each hand using at least of of the cards in hand and returns them as an array
 export function findProbabilty(hand, community){
     let faces = [0/*2*/, 0/*3*/, 0/*4*/, 0/*5*/, 0/*6*/, 0/*7*/, 0/*8*/, 0/*9*/, 0/*10*/, 0/*jack*/, 0/*queen*/, 0/*king*/, 0/*ace*/];
     let suits = [0/*heart*/, 0/*spade*/, 0/*diamond*/,0/*club*/];
@@ -45,6 +48,7 @@ export function findProbabilty(hand, community){
     return percents;
 }
 
+//math function for combination
 function combinations(n,r){
     let top = fact(n);
     let botleft = fact(r);
@@ -54,6 +58,7 @@ function combinations(n,r){
     return result;
 }
 
+//math function for factorial
 function fact(n) {
     let res = 1;
     for (let i = 1; i <= n; i++) {
@@ -62,6 +67,7 @@ function fact(n) {
     return res;
 }
 
+//find chance to get a pair in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function pairProb(faces, hand, drawn){
     let prob1 = "T"
     let pair = false;
@@ -85,6 +91,7 @@ function pairProb(faces, hand, drawn){
     return prob1;
 }
 
+//find chance to get a two pair in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function twoPairProb(faces, hand, drawn){
     let prob2 = "T";
     let pair = false;
@@ -152,6 +159,7 @@ function twoPairProb(faces, hand, drawn){
     return prob2;
 }
 
+//find chance to get a three of a kind in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function threeProb(faces, hand, drawn){
     let prob3 = "T"
     let three = false;
@@ -187,6 +195,7 @@ function threeProb(faces, hand, drawn){
     return prob3;
 }
 
+//find chance to get a straight in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function straightProb(faces, hand, drawn){
     let prob4 = 'T';
     let straight = false;
@@ -243,6 +252,7 @@ function straightProb(faces, hand, drawn){
     return prob4;
 }
 
+//find chance to flush a pair in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function flushProb(suits, hand, cards, drawn){
     let prob5 = 'T';
     let currSuit = '';
@@ -276,6 +286,7 @@ function flushProb(suits, hand, cards, drawn){
     return(prob5);
 }
 
+//find chance to get a full house in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function fullHouseProb(faces, hand, drawn){
     let prob6 = "T";
     let fullHouse = false;
@@ -324,6 +335,7 @@ function fullHouseProb(faces, hand, drawn){
     return prob6;
 }
 
+//find chance to get a four of a kind in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function FourProb(faces, hand, drawn){
     let prob7 = "T";
     let four = false;
@@ -371,6 +383,7 @@ function FourProb(faces, hand, drawn){
     return prob7;
 }
 
+//find chance to get a straight flush in the remaing cards to be drawn using at least one card in hand and returns the percent or the highest applicable high card
 function StraightFlushProb(community, hand, drawn){
     let prob8 = 'T';
     let straightFlush = false;
@@ -400,6 +413,7 @@ function StraightFlushProb(community, hand, drawn){
     return prob8;
 }
 
+//find chance to get a royal flush in the remaing cards to be drawn using at least one card in hand and returns the percent or Wow!
 function royalProb(community, hand, drawn){
     let prob9 = 'T';
     let royal = false;

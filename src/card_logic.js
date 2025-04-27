@@ -10,6 +10,7 @@ import { getRankValue } from "./hand_check.js";
 import "./chips.js";
 import { betChips, getAnte, getCurr, setCurrentBet, tieGame, updateChips, winPot } from "./chips.js";
 import { findProbabilty } from "./probabity.js";
+
 //initiallize the deck as an array of objects representing each card
 const deck = [ {suit : 'heart', number : '2', svgRef : './Cards/H2.svg'}, {suit : 'heart', number : '3', svgRef : './Cards/H3.svg'}, {suit : 'heart', number : '4', svgRef : './Cards/H4.svg'}, {suit : 'heart', number : '5', svgRef : './Cards/H5.svg'}, {suit : 'heart', number : '6', svgRef : './Cards/H6.svg'}, {suit : 'heart', number : '7', svgRef : './Cards/H7.svg'}, {suit : 'heart', number : '8', svgRef : './Cards/H8.svg'}, {suit : 'heart', number : '9', svgRef : './Cards/H9.svg'}, {suit : 'heart', number : '10', svgRef : './Cards/H10.svg'}, {suit : 'heart', number : 'jack', svgRef : './Cards/HJ.svg'}, {suit : 'heart', number : 'queen', svgRef : './Cards/HQ.svg'}, {suit : 'heart', number : 'king', svgRef : './Cards/HK.svg'}, {suit : 'heart', number : 'ace', svgRef : './Cards/HA.svg'},
     {suit : 'spade', number : '2', svgRef : './Cards/S2.svg'}, {suit : 'spade', number : '3', svgRef : './Cards/S3.svg'}, {suit : 'spade', number : '4', svgRef : './Cards/S4.svg'}, {suit : 'spade', number : '5', svgRef : './Cards/S5.svg'}, {suit : 'spade', number : '6', svgRef : './Cards/S6.svg'}, {suit : 'spade', number : '7', svgRef : './Cards/S7.svg'}, {suit : 'spade', number : '8', svgRef : './Cards/S8.svg'}, {suit : 'spade', number : '9', svgRef : './Cards/S9.svg'}, {suit : 'spade', number : '10', svgRef : './Cards/S10.svg'}, {suit : 'spade', number : 'jack', svgRef : './Cards/SJ.svg'}, {suit : 'spade', number : 'queen', svgRef : './Cards/SQ.svg'}, {suit : 'spade', number : 'king', svgRef : './Cards/SK.svg'}, {suit : 'spade', number : 'ace', svgRef : './Cards/SA.svg'},
@@ -41,7 +42,7 @@ function drawCard() {
     return card;
 }
 
-//draw two cards to the player and dealer hand
+//draw two cards to the player and dealer hand, only displays the player's cards
 export function gameStart() {
     console.log("Starting game...");
 
@@ -73,7 +74,7 @@ export function gameStart() {
         console.log("dealer hand index: " + x + " = " + dealer.hand[x].number + " " + dealer.hand[x].suit);
 }
 
-//draw the flop, three cards to the community, First
+//draw the flop, three cards to the community, First,
 export function flop() {
     console.log("Flop...")
     
@@ -99,7 +100,7 @@ export function oneCard() {
         console.log("community index: " + x + " = " + community[x].number + " " + community[x].suit);
 }
 
-//empty the arrays at the end of a round
+//empty the arrays at the end of a round and changes the displayed cards to be card backs
 export function roundEnd() {
     console.log("Ending round...")
     discard = [];
@@ -122,11 +123,13 @@ export function roundEnd() {
     }
 }
 
+//revel the dealers cards
 function reveal() {
     document.getElementById("dealerOne").src = dealer.hand[0].svgRef;
     document.getElementById("dealerTwo").src = dealer.hand[1].svgRef;
 }
 
+//reset all changed values and return to the play game screen
 export function endGame() {
     playerOne.chips = 1000;
     dealer.chips = 10000;
@@ -136,6 +139,7 @@ export function endGame() {
     createHomePage();
 }
 
+//compare player and dealer hands for teh end round container
 function compareHands(playerHand, dealerHand) {
     let hands = ["high card", "one pair", "two pair", "three of a kind", "straight", "flush", "full house", "four of a kind", "straight flush", "royal flush"];
     let playerHandValue = hands.indexOf(playerHand.hand_value);
@@ -266,7 +270,9 @@ function compareHands(playerHand, dealerHand) {
     }
 }
 
+//add functionality to the betting buttons 
 function buttonFunctions(){
+    //player matches the current ante
     let checkButton = document.getElementById("check-button");
     checkButton.addEventListener("click", () => {
         console.log("check " + getAnte());
@@ -277,6 +283,7 @@ function buttonFunctions(){
         gameIterate();
     });
 
+    //player matches the current bet
     let callbutton = document.getElementById("call-button");
     callbutton.addEventListener("click", () =>{
         console.log("call " + getCurr());
@@ -287,6 +294,7 @@ function buttonFunctions(){
         gameIterate();
     });
 
+    //player folds and dealer wins, immediately ends the round
     let foldButton = document.getElementById("fold-button");
     foldButton.addEventListener("click", () =>{
         console.log("fold");
@@ -321,6 +329,7 @@ function buttonFunctions(){
         });
     });
 
+    //player makes a bet that equal to or greater then the current ante
     document.getElementById("bet-button").addEventListener("click", () =>{
         console.log(document.getElementById("bet-raise-slider").value);
         let bet = document.getElementById("bet-raise-slider").value;
@@ -333,6 +342,7 @@ function buttonFunctions(){
         gameIterate();
     });
 
+    //player raises to the current bet
     document.getElementById("raise-button").addEventListener("click", () =>{
         console.log(document.getElementById("bet-raise-slider").value);
         let bet = document.getElementById("bet-raise-slider").value;
@@ -346,6 +356,7 @@ function buttonFunctions(){
     });
 }
 
+//sets the slider fo bet and raise to be in range of the lowest and highest possible bets
 function setSlider(){
     let curr = getCurr();
     const slider = document.getElementById("bet-raise-slider");
@@ -353,6 +364,7 @@ function setSlider(){
     slider.min = curr;
 }
 
+//runs probability and displays the percentages in poker hand table
 function playerPercents(){
     let percents = findProbabilty(playerOne.hand, community);
     let text = '';
@@ -371,16 +383,19 @@ function playerPercents(){
     }
 }
 
+//gamestate iteration
 export function gameIterate() {
     console.log("Begin iteration...")
     let ante = getAnte();
     setSlider();
 
+    //beegining of round, deals players cards
     if(gameState == 0) {
         gameStart();
         playerPercents();
         gameState++;
     }
+    //deals the flop, first three cards of the community
     else if(gameState == 1) {
         flop();
         document.getElementById("communityOne").src = community[0].svgRef;
@@ -389,6 +404,7 @@ export function gameIterate() {
         playerPercents();
         gameState++;
     }
+    //if gamesstate is 2 plays the turn, if gamestate is 3 plays the river, one card to community, the player can make a bet after all fve cards are drawn
     else if(gameState == 2 || gameState == 3) {
         oneCard();
         if(gameState == 2) { document.getElementById("communityFour").src = community[3].svgRef; }
@@ -396,6 +412,7 @@ export function gameIterate() {
         playerPercents();
         gameState++;
     }
+    //reveals the dealer cards and decides a winner, asks if player want to play another round or end game
     else if(gameState == 4) {
         reveal();
         
@@ -426,6 +443,7 @@ export function gameIterate() {
             for(const button of buttons) { button.disabled = false; }
         });
     }
+    //if player decides to end game gamestate will reach 5
     else if(gameState == 5) {
         endGame;
     }
