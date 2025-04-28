@@ -26,9 +26,13 @@ body {
 /*adds styling for the actual button*/
 #start-button-container {    
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    gap:40px;
     margin-top: 100px;
     margin-bottom: 100px;
+    width: fit-content; 
+    margin: 100px auto; 
 
     button {
         border: 0px;
@@ -37,7 +41,7 @@ body {
     }
 }
 /*adjusts the position of the start button*/
-#button-container {
+#button-container   {
     position: fixed;
     bottom: 40px;
     right: 40px;
@@ -53,7 +57,7 @@ body {
     }
 }
 /*adds the animation for the start button*/
-#start-button {
+#start-button, #tutorial-button {
     background: linear-gradient(135deg, #ff1a1a, #990000);
     color: white;
     font-family: 'Georgia', serif;
@@ -265,3 +269,56 @@ body {
     max-width: 500px;
 }
 
+
+/* Tutorial Styling*/
+#tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tutorial-box {
+    background-color: var(--container-color);
+    padding: 25px;
+    border-radius: var(--container-radius);
+    max-width: 400px;
+    z-index: 1001;
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+}
+
+.tutorial-box h3 {
+    color: #ff9999;
+    margin-top: 0;
+}
+
+.tutorial-box p {
+    line-height: 1.5;
+}
+
+.tutorial-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.tutorial-highlight {
+    position: absolute;
+    border: 2px dashed #ff3333;
+    border-radius: 10px;
+    z-index: 1000;
+    animation: pulse 1.5s infinite;
+    display: none;
+}
+
+@keyframes tutorialPulse {
+    0% { border-color: #ff3333; }
+    50% { border-color: #ff9999; }
+    100% { border-color: #ff3333; }
+}
