@@ -27,17 +27,33 @@ export let dealer = new Player;
 dealer.hand = [];
 dealer.chips = 10000;
 let community = [];
- let gameState = 0;
+let gameState = 0;
 let start = true;
 
 //create a random number between 0 and 51 to draw a card, regenerate if card is in the discard
-function drawCard() {
-    let card = Math.floor(Math.random() * 52);
-    console.log("drawing card...")
+function drawCard(override) {
+    let card = -1;
 
-    while(discard.includes(card)) {
-        card++;
+    //draw preselected card if override is set
+    if(override != undefined) {
+        card = override
+
+        //log warning if card duplicate
+        if(discard.includes(card)) {
+            console.warn("drawCard(override) is using a card that already exists")
+        }
     }
+    //otherwise randomly select
+    else {
+        card = Math.floor(Math.random() * 52);
+
+        console.log("drawing card...")
+
+        while(discard.includes(card)) {
+            card++;
+        }
+    }
+    
 
     return card;
 }
@@ -51,6 +67,7 @@ export function gameStart() {
     updateChips(playerOne, "playerChipsPrint");
     updateChips(dealer, "dealerChipsPrint");
 
+    //get player cards first
     for(let i = 0; i < 2; i++) {
         let card = drawCard();
         discard.push(card);
@@ -58,6 +75,7 @@ export function gameStart() {
         console.log(deck[card]);
     }
 
+    //get dealer cards next
     for(let i = 0; i < 2; i++) {
         let card = drawCard();
         discard.push(card);
@@ -129,14 +147,32 @@ function reveal() {
     document.getElementById("dealerTwo").src = dealer.hand[1].svgRef;
 }
 
+function resetGame() {
+    console.log("----------Reset Game----------");
+    removeEndRoundContainer();
+    roundEnd();
+    gameStart();
+    playerPercents();
+
+    const buttons = document.getElementsByTagName("button");
+    for(const button of buttons) {button.disabled = false;}
+}
+
 //reset all changed values and return to the play game screen
 export function endGame() {
+    
+
+    console.log("----------End Game----------")
+    removeEndRoundContainer();
     playerOne.chips = 1000;
     dealer.chips = 10000;
     start = true;
     roundEnd();
     removeGame();
     createHomePage();
+
+    const buttons = document.getElementsByTagName("button");
+    for(const button of buttons) { button.disabled = false; }
 }
 
 //compare player and dealer hands for teh end round container
@@ -309,24 +345,8 @@ function buttonFunctions(){
 
         createEndRoundContainer("player Folds");
 
-        document.getElementById("newRoundButton").addEventListener("click", () =>{
-            console.log("newround");
-            removeEndRoundContainer();
-            roundEnd();
-            gameStart();
-            playerPercents();
-            gameState++;
-            const buttons = document.getElementsByTagName("button");
-            for(const button of buttons) {button.disabled = false;}
-        });
-    
-        document.getElementById("endGameButton").addEventListener("click", () => {
-            console.log("endGame")
-            removeEndRoundContainer();
-            endGame();
-            const buttons = document.getElementsByTagName("button");
-            for(const button of buttons) { button.disabled = false; }
-        });
+        document.getElementById("newRoundButton").addEventListener("click", resetGame);
+        document.getElementById("endGameButton").addEventListener("click", endGame);
     });
 
     //player makes a bet that equal to or greater then the current ante
@@ -426,22 +446,8 @@ export function gameIterate() {
 
         createEndRoundContainer(compareHands(playerHand, dealerHand));
 
-        document.getElementById("newRoundButton").addEventListener("click", () => {
-            console.log("newround")
-            removeEndRoundContainer();
-            roundEnd();
-            gameStart();
-            gameState++;
-            const buttons = document.getElementsByTagName("button");
-            for(const button of buttons) {button.disabled = false;}
-        });
-        document.getElementById("endGameButton").addEventListener("click", () => {
-            console.log("endGame")
-            removeEndRoundContainer();
-            endGame();
-            const buttons = document.getElementsByTagName("button");
-            for(const button of buttons) { button.disabled = false; }
-        });
+        document.getElementById("newRoundButton").addEventListener("click", resetGame);
+        document.getElementById("endGameButton").addEventListener("click", endGame);
     }
     //if player decides to end game gamestate will reach 5
     else if(gameState == 5) {
