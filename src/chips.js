@@ -2,8 +2,8 @@
 import { Player } from "./players.js";
 //variables to hold number of chips
 let pot = 0;
-let ante = 50;
-let curr = 50;
+let ante = 10;
+let curr = 10;
 
 //function to set the chips for the player and dealer
 
@@ -14,6 +14,7 @@ export function betChips(player, wager) {
         player.bet = wager;
         player.chips -= wager;
         pot += wager;
+        curr = wager;
     }else {
         return "Not enough chips to bet";
     }

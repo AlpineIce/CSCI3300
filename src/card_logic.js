@@ -10,6 +10,7 @@ import { getRankValue } from "./hand_check.js";
 import "./chips.js";
 import { betChips, getAnte, getCurr, setCurrentBet, tieGame, updateChips, winPot } from "./chips.js";
 import { findProbabilty } from "./probabity.js";
+import { npcBetting } from "./npcLogic.js";
 
 //initiallize the deck as an array of objects representing each card
 const deck = [ {suit : 'heart', number : '2', svgRef : './Cards/H2.svg'}, {suit : 'heart', number : '3', svgRef : './Cards/H3.svg'}, {suit : 'heart', number : '4', svgRef : './Cards/H4.svg'}, {suit : 'heart', number : '5', svgRef : './Cards/H5.svg'}, {suit : 'heart', number : '6', svgRef : './Cards/H6.svg'}, {suit : 'heart', number : '7', svgRef : './Cards/H7.svg'}, {suit : 'heart', number : '8', svgRef : './Cards/H8.svg'}, {suit : 'heart', number : '9', svgRef : './Cards/H9.svg'}, {suit : 'heart', number : '10', svgRef : './Cards/H10.svg'}, {suit : 'heart', number : 'jack', svgRef : './Cards/HJ.svg'}, {suit : 'heart', number : 'queen', svgRef : './Cards/HQ.svg'}, {suit : 'heart', number : 'king', svgRef : './Cards/HK.svg'}, {suit : 'heart', number : 'ace', svgRef : './Cards/HA.svg'},
@@ -25,10 +26,11 @@ playerOne.hand = []
 playerOne.chips = 1000;
 export let dealer = new Player;
 dealer.hand = [];
-dealer.chips = 10000;
+dealer.chips = 1000;
 let community = [];
 let gameState = 0;
 let start = true;
+let betting = false;
 
 //create a random number between 0 and 51 to draw a card, regenerate if card is in the discard
 function drawCard(override) {
@@ -86,6 +88,10 @@ export function gameStart() {
     document.getElementById("holeOne").src = playerOne.hand[0].svgRef;
     document.getElementById("holeTwo").src = playerOne.hand[1].svgRef;
 
+    let log = document.createElement("p");
+    log.innerText = "Start Round.";
+    document.getElementById("gameLog").appendChild(log);
+
     for(let x in playerOne.hand)
         console.log("player hand index: " + x + " = " + playerOne.hand[x].number + " " + playerOne.hand[x].suit);
     for(let x in dealer.hand)
@@ -142,12 +148,12 @@ export function roundEnd() {
 }
 
 //revel the dealers cards
-function reveal() {
+export function reveal() {
     document.getElementById("dealerOne").src = dealer.hand[0].svgRef;
     document.getElementById("dealerTwo").src = dealer.hand[1].svgRef;
 }
 
-function resetGame() {
+export function resetGame() {
     console.log("----------Reset Game----------");
     removeEndRoundContainer();
     roundEnd();
@@ -180,14 +186,20 @@ function compareHands(playerHand, dealerHand) {
     let hands = ["high card", "one pair", "two pair", "three of a kind", "straight", "flush", "full house", "four of a kind", "straight flush", "royal flush"];
     let playerHandValue = hands.indexOf(playerHand.hand_value);
     let dealerHandValue = hands.indexOf(dealerHand.hand_value);
+    const gameLog = document.getElementById("gameLog");
+    let log = document.createElement("p");
 
     if(playerHandValue > dealerHandValue) {
         console.log("player wins");
+        log.innerText = "Player wins.";
+        gameLog.appendChild(log);
         winPot(playerOne);
         return "player wins with " + playerHand.hand_value;
     }
     else if(dealerHandValue > playerHandValue) {
         console.log("dealer wins");
+        log.innerText = "Dealer wins.";
+        gameLog.appendChild(log);
         winPot(dealer);
         return "dealer wins with " + dealerHand.hand_value;
     }
@@ -197,11 +209,15 @@ function compareHands(playerHand, dealerHand) {
 
         if(playerHighCard > dealerHighCard) {
             console.log("player wins");
+            log.innerText = "Player wins.";
+            gameLog.appendChild(log);
             winPot(playerOne);
             return "player wins with a high card of" + playerHand.highcard;
         }
         else if(dealerHighCard > playerHighCard) {
             console.log("dealer wins");
+            log.innerText = "Dealer wins.";
+            gameLog.appendChild(log);
             winPot(dealer);
             return "dealer wins with a high card of" + dealerHand.highcard;
         }
@@ -214,11 +230,15 @@ function compareHands(playerHand, dealerHand) {
 
                 if(result[0] ==   "player 1 wins") {
                     console.log("player wins")
+                    log.innerText = "Player wins.";
+                    gameLog.appendChild(log);
                     winPot(playerOne);
                     return "player wins with two pair kicker of " + result[1]
                 }
                 else if(result[0] == "player 2 wins") {
                         console.log("dealer wins")
+                        log.innerText = "Dealer wins.";
+                        gameLog.appendChild(log);
                         winPot(dealer);
                         return "dealer wins with two pair kicker of " + result[1]
                 }
@@ -230,14 +250,20 @@ function compareHands(playerHand, dealerHand) {
                     
                     if(kickerResult[0] == "player 1 wins") {
                         console.log("player wins")
+                        log.innerText = "Player wins.";
+                        gameLog.appendChild(log);
                         winPot(playerOne);
                         return "player wins with a kicker of " + kickerResult[1]
                     } else if(kickerResult[0] == "player 2 wins") {
                         console.log("dealer wins")
+                        log.innerText = "Dealer wins.";
+                        gameLog.appendChild(log);
                         winPot(dealer);
                         return "dealer wins with a kicker of " + kickerResult[1]
                     } else {
                         console.log("tie")
+                        log.innerText = "Tie.";
+                        gameLog.appendChild(log);
                         tieGame(playerOne, dealer);
                         return "tie"
                     }
@@ -249,11 +275,15 @@ function compareHands(playerHand, dealerHand) {
 
                 if(playerfullHouseKicker > dealerfullHouseKicker) {
                     console.log("player wins")
+                    log.innerText = "Player wins.";
+                    gameLog.appendChild(log);
                     winPot(playerOne);
                     return "player wins with a full house kicker of " + playerfullHouseKicker
                 }
                 else if(dealerfullHouseKicker > playerfullHouseKicker) {
                     console.log("dealer wins")
+                    log.innerText = "Dealer wins.";
+                    gameLog.appendChild(log);
                     winPot(dealer);
                     return "dealer wins with a full house kicker of " + dealerfullHouseKicker
                 }
@@ -265,16 +295,22 @@ function compareHands(playerHand, dealerHand) {
                     
                     if(kickerResult[0] == "player 1 wins") {
                         console.log("player wins")
+                        log.innerText = "Player wins.";
+                        gameLog.appendChild(log);
                         winPot(playerOne);
                         return "player wins with a kicker of " + kickerResult[1]
                     }
                     else if(kickerResult[0] == "player 2 wins") {
                         console.log("dealer wins")
+                        log.innerText = "Dealer wins.";
+                        gameLog.appendChild(log);
                         winPot(dealer);
                         return "dealer wins with a kicker of " + kickerResult[1]
                     }
                     else {
                         console.log("tie")
+                        log.innerText = "Tie.";
+                        gameLog.appendChild(log);
                         tieGame(playerOne, dealer);
                         return "tie"
                     }
@@ -288,16 +324,22 @@ function compareHands(playerHand, dealerHand) {
                 
                 if(kickerResult[0] == "player 1 wins") {
                     console.log("player wins")
+                    log.innerText = "Player wins.";
+                    gameLog.appendChild(log);
                     winPot(playerOne);
                     return "player wins with a kicker of " + kickerResult[1]
                 }
                 else if(kickerResult[0] == "player 2 wins") {
                     console.log("dealer wins")
+                    log.innerText = "Dealer wins.";
+                    gameLog.appendChild(log);
                     winPot(dealer);
                     return "dealer wins with a kicker of " + kickerResult[1]
                 }
                 else {
                     console.log("tie")
+                    log.innerText = "Dealer wins.";
+                    gameLog.appendChild(log);
                     tieGame(playerOne, dealer);
                     return "tie"
                 }
@@ -306,16 +348,30 @@ function compareHands(playerHand, dealerHand) {
     }
 }
 
+function bettingCheck(){
+    if(playerOne.bet == dealer.bet){
+        document.getElementById("check-button").disabled = false;
+        betting = false;
+    }
+    else{
+        document.getElementById("check-button").disabled = true;
+        console.log("still betting");}
+}
+
 //add functionality to the betting buttons 
 function buttonFunctions(){
+    const gameLog = document.getElementById("gameLog");
+    let log = document.createElement("p");
     //player matches the current ante
     let checkButton = document.getElementById("check-button");
     checkButton.addEventListener("click", () => {
         console.log("check " + getAnte());
+        log.innerText = "player checks " + getAnte() + ".";
+        gameLog.appendChild(log);
         betChips(playerOne, getAnte());
-        betChips(dealer, getAnte());
         updateChips(playerOne, "playerChipsPrint");
-        updateChips(dealer, "dealerChipsPrint");
+        npcBetting(dealer.hand, community, dealer, playerOne);
+        bettingCheck();
         gameIterate();
     });
 
@@ -323,10 +379,12 @@ function buttonFunctions(){
     let callbutton = document.getElementById("call-button");
     callbutton.addEventListener("click", () =>{
         console.log("call " + getCurr());
+        log.innerText = "Player calls " + getCurr() + ".";
+        gameLog.appendChild(log);
         betChips(playerOne, getCurr());
-        betChips(dealer, getCurr());
         updateChips(playerOne, "playerChipsPrint");
-        updateChips(dealer, "dealerChipsPrint");
+        npcBetting(dealer.hand, community, dealer, playerOne);
+        bettingCheck();
         gameIterate();
     });
 
@@ -334,6 +392,8 @@ function buttonFunctions(){
     let foldButton = document.getElementById("fold-button");
     foldButton.addEventListener("click", () =>{
         console.log("fold");
+        log.innerText = "Player folds."
+        gameLog.appendChild(log);
 
         winPot(dealer);
         updateChips(dealer, "dealerChipsPrint");
@@ -354,11 +414,13 @@ function buttonFunctions(){
         console.log(document.getElementById("bet-raise-slider").value);
         let bet = document.getElementById("bet-raise-slider").value;
         console.log(bet);
+        log.innerText = "Player bets " + bet + ".";
+        gameLog.appendChild(log);
         setCurrentBet(bet);
         betChips(playerOne, getCurr());
-        betChips(dealer, getCurr());
         updateChips(playerOne, "playerChipsPrint");
-        updateChips(dealer, "dealerChipsPrint");
+        npcBetting(dealer.hand, community, dealer, playerOne);
+        bettingCheck();
         gameIterate();
     });
 
@@ -367,11 +429,13 @@ function buttonFunctions(){
         console.log(document.getElementById("bet-raise-slider").value);
         let bet = document.getElementById("bet-raise-slider").value;
         console.log(bet);
+        log.innerText = "Player raises " + bet + ".";
+        gameLog.appendChild(log);
         setCurrentBet(bet);
         betChips(playerOne, getCurr());
-        betChips(dealer, getCurr());
         updateChips(playerOne, "playerChipsPrint");
-        updateChips(dealer, "dealerChipsPrint");
+        npcBetting(dealer.hand, community, dealer, playerOne);
+        bettingCheck();
         gameIterate();
     });
 }
@@ -407,34 +471,50 @@ function playerPercents(){
 export function gameIterate() {
     console.log("Begin iteration...")
     let ante = getAnte();
+    const gameLog = document.getElementById("gameLog");
+    let log = document.createElement("p");
     setSlider();
 
-    //beegining of round, deals players cards
+    if(!betting){
+        //beegining of round, deals players cards
     if(gameState == 0) {
         gameStart();
         playerPercents();
         gameState++;
+        betting = true;
     }
     //deals the flop, first three cards of the community
     else if(gameState == 1) {
         flop();
+        log.innerText = "Flop.";
+        gameLog.appendChild(log);
         document.getElementById("communityOne").src = community[0].svgRef;
         document.getElementById("communityTwo").src = community[1].svgRef;
         document.getElementById("communityThree").src = community[2].svgRef;
         playerPercents();
         gameState++;
+        betting = true;
     }
     //if gamesstate is 2 plays the turn, if gamestate is 3 plays the river, one card to community, the player can make a bet after all fve cards are drawn
     else if(gameState == 2 || gameState == 3) {
         oneCard();
-        if(gameState == 2) { document.getElementById("communityFour").src = community[3].svgRef; }
-        if(gameState == 3) { document.getElementById("communityFive").src = community[4].svgRef; }
+        if(gameState == 2) {
+            log.innerText = "Turn."
+            gameLog.appendChild(log);
+            document.getElementById("communityFour").src = community[3].svgRef; }
+        if(gameState == 3) {
+            log.innerText = "River";
+            gameLog.appendChild(log);
+            document.getElementById("communityFive").src = community[4].svgRef; }
         playerPercents();
         gameState++;
+        betting = true;
     }
     //reveals the dealer cards and decides a winner, asks if player want to play another round or end game
     else if(gameState == 4) {
         reveal();
+        log.innerText = "Reveal.";
+        gameLog.appendChild(log);
         
         let playerHand = checkplayerhand(playerOne.hand, community);
         let dealerHand = checkplayerhand(dealer.hand, community);
@@ -456,4 +536,5 @@ export function gameIterate() {
 
     setCurrentBet(ante);
     console.log("End iteration...");
+    }
 }

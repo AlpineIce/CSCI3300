@@ -225,6 +225,7 @@ export function removeGame(){
     document.getElementById("community-cards-container").remove();
     document.getElementById("hole-cards-container").remove();
     document.getElementById("dealer-cards-container").remove();
+    document.getElementById("gameLogContainer").remove();
     document.getElementById("potContainer").remove();
     document.getElementById("playerChips").remove();
     document.getElementById("dealerChips").remove();
@@ -259,12 +260,23 @@ function createChips(containerID, chipsID) {
     container.appendChild(text);
 }
 
+function createGameLog(){
+    const container = document.createElement("div");
+    container.id = "gameLogContainer";
+    container.classList.add("container");
+    const gameLog = document.createElement("div");
+    gameLog.id = "gameLog";
+    container.appendChild(gameLog);
+    document.body.appendChild(container);
+}
+
 export function initializeGui() {
     createPokerHandTable();
     createInteractionContainer();
     createCommunityCardsContainer();
     createHoleCardsContainer();
     createDealerCardsContainer();
+    createGameLog();
     createChips("potContainer", "potPrint");
     createChips("playerChips", "playerChipsPrint");
     createChips("dealerChips", "dealerChipsPrint");
