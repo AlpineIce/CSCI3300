@@ -1,6 +1,7 @@
 # Jack of All Trades
-Jack of All Trades is a poker simulator that can be used to learn how to play poker.
-
+Jack of All Trades is a poker simulator that can be used to learn how to play poker with simulated games. 
+It has functionality for the typical control flow of a poker game with a computer opponent, and calculates 
+the outcomes of games automatically.
 
 ## Example Image
 ![Example Image](res/readmeImage.png)
