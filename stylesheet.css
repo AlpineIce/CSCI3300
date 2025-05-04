@@ -322,22 +322,18 @@ body {
     right: 40px;
     top: 40px;
     width: 150px;
-    height: 100px;
+    height: 150px;
+    overflow-y: scroll;
 }
 
 #gameLog{
-    position: relative;
     display: flex;
     flex-direction: column;
-    left: 10%;
-    top: 10%;
-    width: 80%;
-    height: 80%;
-    background-color: lightgray;
-    overflow-y: auto;
+    color: white;
+    font-size: 12px;
 
-    p{
-        color: black;
+    p {
+        margin: 5px 0px;
     }
 }
 
